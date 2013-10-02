@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Collector.Common;
 
 namespace Worker.Common
 {
@@ -37,11 +38,27 @@ namespace Worker.Common
 				var obj = o as VkPost;
 
 				s.Write("\""); s.Write(obj.Id); s.Write("\",");
+				s.Write("\""); s.Write(obj.ToId); s.Write("\",");
+				s.Write("\""); s.Write(obj.FromId); s.Write("\",");
+				s.Write("\""); s.Write(obj.Date); s.Write("\",");
 				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-				//s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
-				//s.Write("\""); s.Write(obj.IsClosed); s.Write("\",");
-				//s.Write("\""); s.Write((int)obj.Type); s.Write("\",");
-				//s.Write("\""); s.Write(obj.MembersCount); s.Write("\"\n");
+				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+
+				if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
+				{
+					var copyPost = obj.CopyHistory.First();
+					s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
+					s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
+					s.Write("\""); s.Write(obj.Text); s.Write("\"");
+				}
+				else
+				{
+					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_dae
+					s.Write("\""); s.Write(0); s.Write("\","); // copy_owner_id
+					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_id
+					s.Write("\""); s.Write(""); s.Write("\""); // copy_text
+				}
+				
 				s.Write("\n");
 			});
 
