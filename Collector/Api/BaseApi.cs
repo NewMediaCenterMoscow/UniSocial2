@@ -14,13 +14,14 @@ namespace Collector.Api
 {
 	public abstract class BaseApi : IApi
 	{
+		[Inject]
+		public TraceSource Trace { get; set; }
+
 		protected HttpClient client = new HttpClient();
 
 		protected string baseUri;
 
-		[Inject]
-		public TraceSource Trace { get; set; }
-
+		protected static int requestNumber = 0;
 
 		public BaseApi()
 		{
@@ -53,7 +54,8 @@ namespace Collector.Api
 			var data = await client.GetStringAsync(requestUri.ToString());
 			var result = JObject.Parse(data);
 
-			Trace.TraceInformation("Request success: " + Method);
+			//Trace.TraceInformation("Request success: " + Method);
+			Trace.TraceEvent(TraceEventType.Information, requestNumber++, "Request success: " + Method);
 
 			return result;
 		}

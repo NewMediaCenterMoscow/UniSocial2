@@ -2,6 +2,7 @@
 using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,10 @@ namespace Worker.Blocks
 {
 	class BlockFactory
 	{
+		[Inject]
+		public TraceSource Trace { get; set; }
+
+
 		public BlockFactory()
 		{
 			createNinjectModules();
@@ -120,13 +125,14 @@ namespace Worker.Blocks
 						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(CollectTask.Method));
 					}
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
 				}
 
 				return result;
-			});
-			//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
+			//});
+			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
 		}
 
 		public TransformBlock<object, Stream> ToCSVStream()

@@ -15,15 +15,17 @@ namespace Worker.Common
 	class DataCollector
 	{
 		[Inject]
-		protected TraceSource Trace { get; set; }
+		public TraceSource Trace { get; set; }
 
 		BlockFactory blockFactory;
 		BlockController blockController;
 
-		public DataCollector()
+		public DataCollector(BlockFactory Factory, BlockController Controller)
 		{
-			blockFactory = new BlockFactory();
-			blockController = new BlockController();
+			//blockFactory = new BlockFactory();
+			//blockController = new BlockController();
+			blockFactory = Factory;
+			blockController = Controller;
 		}
 
 		public async Task Collect(CollectTask collectTask)
