@@ -48,22 +48,14 @@ namespace Collector.Api
 
 		public virtual async Task<JObject> ExecuteRequest(string Method, Dictionary<string, string> Params)
 		{
-			try
-			{
-				var requestUri = formatUri(Method, Params);
+			var requestUri = formatUri(Method, Params);
 
-				var data = await client.GetStringAsync(requestUri.ToString());
-				var result = JObject.Parse(data);
+			var data = await client.GetStringAsync(requestUri.ToString());
+			var result = JObject.Parse(data);
 
-				Trace.TraceInformation("Request success: " + Method);
+			Trace.TraceInformation("Request success: " + Method);
 
-				return result;
-			}
-			catch (TaskCanceledException)
-			{
-				Trace.TraceEvent(TraceEventType.Warning, this.GetHashCode(), "Task cancelation");
-				return null;
-			}
+			return result;
 		}
 
 

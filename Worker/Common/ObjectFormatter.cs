@@ -72,6 +72,10 @@ namespace Worker.Common
 			if(Object is List<object>)
 			{
 				var listObjs = Object as List<object>;
+
+				if (listObjs.Count == 0)
+					return null;
+
 				var t = listObjs.First().GetType();
 
 				foreach (var item in listObjs)

@@ -70,12 +70,13 @@ namespace Worker.Blocks
 		{
 			return
 				new ActionBlock<Stream>(stream => {
-					using (var file = File.Open(Filename, FileMode.Append, FileAccess.Write,FileShare.None))
-					{
-						stream.Seek(0, SeekOrigin.Begin);
-						stream.CopyTo(file);
-						file.Flush();
-					}
+					if(stream != null)
+						using (var file = File.Open(Filename, FileMode.Append, FileAccess.Write,FileShare.None))
+						{
+							stream.Seek(0, SeekOrigin.Begin);
+							stream.CopyTo(file);
+							file.Flush();
+						}
 				});
 		}
 
@@ -103,17 +104,24 @@ namespace Worker.Blocks
 				var requestType = apiRequest.GetRequestType(method);
 
 				object result = null;
-				if (requestType == ApiRequestType.ObjectInfo)
+
+				try
 				{
-					result = await apiRequest.ExecuteRequest(method, ids[0]);
+					if (requestType == ApiRequestType.ObjectInfo)
+					{
+						result = await apiRequest.ExecuteRequest(method, ids[0]);
+					}
+					if (requestType == ApiRequestType.ListObjectsInfo)
+					{
+						result = await apiRequest.ExecuteRequest(method, ids.ToList());
+					}
+					if (requestType == ApiRequestType.ListForObject)
+					{
+						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(CollectTask.Method));
+					}
 				}
-				if (requestType == ApiRequestType.ListObjectsInfo)
+				catch (Exception)
 				{
-					result = await apiRequest.ExecuteRequest(method, ids.ToList());
-				}
-				if (requestType == ApiRequestType.ListForObject)
-				{
-					result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(CollectTask.Method));
 				}
 
 				return result;
@@ -124,6 +132,9 @@ namespace Worker.Blocks
 		public TransformBlock<object, Stream> ToCSVStream()
 		{
 			return new TransformBlock<object, Stream>(o => {
+
+				if (o == null)
+					return null;
 
 				var objectFormatter = new ObjectFormatter();
 				var stream = objectFormatter.ToCSV(o);

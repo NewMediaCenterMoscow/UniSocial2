@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -47,29 +48,35 @@ namespace Collector.Api
 		public override async Task<JObject> ExecuteRequest(string Method, Dictionary<string, string> Params)
 		{
 			JObject result = null;
-			do
+
+			try
 			{
 				result = await base.ExecuteRequest(Method, Params);
 
-				if (result == null)
-				{
-					Console.Error.WriteLine("Task cancelation - sleep and continue");
-					Thread.Sleep(60000);
-				}
 			}
-			while (result == null);
+			catch (TaskCanceledException)
+			{
+				Trace.TraceEvent(TraceEventType.Warning, this.GetHashCode(), "Task cancelation");
+				result = null;
+				Thread.Sleep(60000);
+			}
 
 			if (result["error"] != null)
 			{
 				var errorCode = (int)result["error"]["error_code"];
 				if (errorCode == 6)
 				{
-					Console.Error.WriteLine("Too many request - sleep and continue");
+					Trace.TraceEvent(TraceEventType.Warning, this.GetHashCode(), "Too many request");
+					result = null;
 					Thread.Sleep(2000);
-					return await ExecuteRequest(Method, Params);
 				}
 				else
 					throw new ApiException((string)result["error"]["error_msg"], errorCode);
+			}
+
+			if (result == null)
+			{
+				return await ExecuteRequest(Method, Params);
 			}
 
 			return result;

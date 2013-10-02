@@ -29,8 +29,6 @@ namespace Worker
 			//var task = Task.Factory.StartNew(() => mainLoop(queueName));
 			//task.Wait();
 
-
-			
 			var task = TestWork();
 			task.Wait();
 		}
@@ -92,7 +90,7 @@ namespace Worker
 			var dataCollector = ninject.Get<DataCollector>();
 
 			var collectTask = new CollectTask("vkontakte", "wall.get");
-			collectTask.Input = new CollectTaskIOFile("input.txt");
+			collectTask.Input = new CollectTaskIOFile("users.txt");
 			collectTask.Output = new CollectTaskIOFile("result.txt");
 
 			await dataCollector.Collect(collectTask);
