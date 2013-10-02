@@ -16,10 +16,10 @@ namespace Worker.Common
 		{
 			formatters = new Dictionary<Type,Action<object, StreamWriter>>();
 
-			formatters.Add(typeof(VkUser), (o,s) =>{
-				var obj = o as VkUser;
-				s.WriteLine(obj.FirstName);
-			});
+			//formatters.Add(typeof(VkUser), (o,s) =>{
+			//	var obj = o as VkUser;
+			//	s.WriteLine(obj.FirstName);
+			//});
 			formatters.Add(typeof(VkGroup), (o, s) =>
 			{
 				var obj = o as VkGroup;
@@ -32,10 +32,18 @@ namespace Worker.Common
 				s.Write("\""); s.Write(obj.MembersCount);				s.Write("\"\n");
 
 			});
+			formatters.Add(typeof(VkPost), (o, s) =>
+			{
+				var obj = o as VkPost;
 
-
-
-
+				s.Write("\""); s.Write(obj.Id); s.Write("\",");
+				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
+				//s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+				//s.Write("\""); s.Write(obj.IsClosed); s.Write("\",");
+				//s.Write("\""); s.Write((int)obj.Type); s.Write("\",");
+				//s.Write("\""); s.Write(obj.MembersCount); s.Write("\"\n");
+				s.Write("\n");
+			});
 
 		}
 

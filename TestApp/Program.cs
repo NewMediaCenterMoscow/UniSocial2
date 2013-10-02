@@ -45,8 +45,8 @@ namespace TestApp
 			var results = new List<VkUser>();
 			foreach (var users in partData)
 			{
-				var usersData = await apiRequest.ExecuteRequest<VkUser>("users.get", users);
-				results.AddRange(usersData);
+				var usersData = await apiRequest.ExecuteRequest("users.get", users);
+				results.AddRange(usersData as List<VkUser>);
 				Thread.Sleep(10);
 
 				if (counter % 50 == 0)

@@ -21,15 +21,18 @@ namespace Worker
 
 		static void Main(string[] args)
 		{
-			var appSettings = ConfigurationManager.AppSettings;
-			string queueName = appSettings["inputQueue"];
+			//var appSettings = ConfigurationManager.AppSettings;
+			//string queueName = appSettings["inputQueue"];
 
-			Trace.TraceInformation("Input queue name: {0}", queueName);
+			//Trace.TraceInformation("Input queue name: {0}", queueName);
 
-			var task = Task.Factory.StartNew(() => mainLoop(queueName));
+			//var task = Task.Factory.StartNew(() => mainLoop(queueName));
+			//task.Wait();
+
+
+			
+			var task = TestWork();
 			task.Wait();
-
-
 		}
 
 
@@ -88,7 +91,7 @@ namespace Worker
 			var ninject = new StandardKernel(new NinjectModules.Worker());
 			var dataCollector = ninject.Get<DataCollector>();
 
-			var collectTask = new CollectTask("vkontakte", "users.get");
+			var collectTask = new CollectTask("vkontakte", "wall.get");
 			collectTask.Input = new CollectTaskIOFile("input.txt");
 			collectTask.Output = new CollectTaskIOFile("result.txt");
 

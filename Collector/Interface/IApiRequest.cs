@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 
 namespace Collector.Interface
 {
+	public enum ApiRequestType
+	{
+		ObjectInfo,
+		ListForObject,
+		ListObjectsInfo
+	}
+
 	public interface IApiRequest
 	{
+		int GetRequestBatchSize(string Method);
+
+		ApiRequestType GetRequestType(string Method);
+
+		int GetRequestItemsMaxCount(string Method);
+
 		Task<object> ExecuteRequest(string Method, string Id);
-		Task<T> ExecuteRequest<T>(string Method, string Id) where T : class;
-
-		Task<List<object>> ExecuteRequest(string Method, List<string> Ids);
-		Task<List<T>> ExecuteRequest<T>(string Method, List<string> Ids) where T : class;
-
-		Task<List<object>> ExecuteRequest(string Method, string Id, int Offset, int Count);
-		Task<List<T>> ExecuteRequest<T>(string Method, string Id, int Offset, int Count) where T : class;
-
+		Task<object> ExecuteRequest(string Method, List<string> Ids);
+		Task<object> ExecuteRequest(string Method, string Id, int Offset, int Count);
 	}
 }

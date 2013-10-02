@@ -45,7 +45,11 @@ namespace Collector.Api
 		protected IDataExtractor dataExtractor;
 
 		protected Dictionary<string, ApiRequestParam> requestParams;
-		protected Dictionary<string, Type> typeForMethods;
+		protected Dictionary<string, Type> objectTypeForMethods;
+		protected Dictionary<string, int> batchSizes;
+		protected Dictionary<string, int> itemsMaxCounts;
+		protected Dictionary<string, ApiRequestType> requestTypes;
+
 
 		[Inject]
 		public TraceSource Trace { get; set; }
@@ -56,19 +60,48 @@ namespace Collector.Api
 			dataExtractor = DataExtractor;
 
 			requestParams = new Dictionary<string, ApiRequestParam>();
-			typeForMethods = new Dictionary<string, Type>();
+			objectTypeForMethods = new Dictionary<string, Type>();
+			batchSizes = new Dictionary<string, int>();
+			itemsMaxCounts = new Dictionary<string, int>();
+			requestTypes = new Dictionary<string, ApiRequestType>();
+		}
+
+		public int GetRequestBatchSize(string Method)
+		{
+			if (!batchSizes.ContainsKey(Method))
+				return 1;
+			else
+				return batchSizes[Method];
+		}
+
+		public int GetRequestItemsMaxCount(string Method)
+		{
+			if (!itemsMaxCounts.ContainsKey(Method))
+				return 1;
+			else
+				return itemsMaxCounts[Method];
 		}
 
 
-		protected virtual Type getTypeForMethod(string Method)
+		public ApiRequestType GetRequestType(string Method)
 		{
-			if (!typeForMethods.ContainsKey(Method))
+			if (!requestTypes.ContainsKey(Method))
+				return ApiRequestType.ObjectInfo;
+			else
+				return requestTypes[Method];
+		}
+
+
+
+		protected Type getObjectTypeForMethod(string Method)
+		{
+			if (!objectTypeForMethods.ContainsKey(Method))
 				throw new NotSupportedException("Method " + Method + " not supported!");
 
-			return typeForMethods[Method];
+			return objectTypeForMethods[Method];
 		}
 
-		protected virtual ApiRequestParam getParams(string method)
+		protected ApiRequestParam getRequestParams(string method)
 		{
 			if (!requestParams.ContainsKey(method))
 				return new ApiRequestParam(method);
@@ -85,54 +118,87 @@ namespace Collector.Api
 		protected abstract void setIdParams(ApiRequestParam requestParam, List<string> ids);
 
 
+		protected ApiRequestParam createRequestParam(string Method)
+		{
+			var param = getRequestParams(Method);
+
+			return param;
+		}
+
+		protected async Task<object> executeRequest(ApiRequestParam param)
+		{
+			var needObjectType = getObjectTypeForMethod(param.Method);
+
+			var rawData = await api.ExecuteRequest(param.Method, param.Params);
+
+			object result;
+			var requestType = this.GetRequestType(param.Method);
+			if (requestType == ApiRequestType.ObjectInfo)
+			{
+				result = dataExtractor.GetItem(rawData, needObjectType);
+			}
+			else
+			{
+				result = dataExtractor.GetItems(rawData, needObjectType);
+			}
+
+			return result;
+		}
+
 		public async Task<object> ExecuteRequest(string Method, string Id)
 		{
-			var needObjectType = getTypeForMethod(Method);
-			var param = getParams(Method);
+			var param = createRequestParam(Method);
+
 			setIdParams(param, Id);
 
-			var rawData = await api.ExecuteRequest(param.Method, param.Params);
-			var result = dataExtractor.GetItem(rawData, needObjectType);
-
+			var result = await executeRequest(param);
 			return result;
 		}
-		public async Task<List<object>> ExecuteRequest(string Method, List<string> Ids)
+		public async Task<object> ExecuteRequest(string Method, List<string> Ids)
 		{
-			var needObjectType = getTypeForMethod(Method);
-			var param = getParams(Method);
+			var param = createRequestParam(Method);
+
 			setIdParams(param, Ids);
 
-			var rawData = await api.ExecuteRequest(param.Method, param.Params);
-			var result = dataExtractor.GetItems(rawData, needObjectType);
-
+			var result = await executeRequest(param);
 			return result;
 		}
-		public async Task<List<object>> ExecuteRequest(string Method, string Id, int Offset, int Count)
+		public async Task<object> ExecuteRequest(string Method, string Id, int Offset, int Count)
 		{
-			var needObjectType = getTypeForMethod(Method);
-			var param = getParams(Method);
-			setIdParams(param, Id);
-			setListParams(param, Offset, Count);
+			var param = createRequestParam(Method);
 
-			var rawData = await api.ExecuteRequest(param.Method, param.Params);
-			var result = dataExtractor.GetItems(rawData, needObjectType);
+			List<object> resultList = new List<object>();
+			List<object> result;
 
-			return result;
-		}
+			var maxLimit = 2000;
+			var currentOffset = Offset;
+			var currentCount = Count;
 
-		public async Task<T> ExecuteRequest<T>(string Method, string Id) where T : class
-		{
-			return await this.ExecuteRequest(Method, Id) as T;
-		}
-		public async Task<List<T>> ExecuteRequest<T>(string Method, List<string> Ids) where T : class
-		{
-			var result = await this.ExecuteRequest(Method, Ids);
-			return result.Cast<T>().ToList();
-		}
-		public async Task<List<T>> ExecuteRequest<T>(string Method, string Id, int Offset, int Count) where T : class
-		{
-			var result = await this.ExecuteRequest(Method, Id, Offset, Count);
-			return result.Cast<T>().ToList();
+			while(true)
+			{
+				setIdParams(param, Id);
+				setListParams(param, currentOffset, currentCount);
+
+				result = await executeRequest(param) as List<object>;
+
+				if (result != null)
+				{
+					resultList.AddRange(result);
+
+					if (currentOffset > maxLimit || result.Count < currentCount)
+					{
+						break;
+					}
+
+					currentOffset += currentCount;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return resultList;
 		}
 	}
 }

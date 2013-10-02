@@ -66,6 +66,7 @@
     <Compile Include="Interface\IDataExtractor.cs" />
     <Compile Include="Model\VkGroup.cs" />
     <Compile Include="Model\VkList.cs" />
+    <Compile Include="Model\VkNestedCount.cs" />
     <Compile Include="Model\VkPost.cs" />
     <Compile Include="Model\VkUser.cs" />
     <Compile Include="Model\VkUserSubscriptions.cs" />

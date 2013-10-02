@@ -12,10 +12,10 @@ namespace Collector.Api
 {
 	public class VkDataExtractor : IDataExtractor
 	{
-		//public int GetListCount(JObject Data)
-		//{
-		//	return (int)Data["count"];
-		//}
+		public int GetListCount(JObject Data)
+		{
+			return (int)Data["response"]["count"];
+		}
 
 		public List<object> GetItems(JObject Data, Type T)
 		{
@@ -31,7 +31,8 @@ namespace Collector.Api
 			}
 			else
 			{
-				var res = data.ToObject(listType);
+				var tmp = data["items"];
+				var res = tmp.ToObject(listType);
 				return ((IEnumerable)res).Cast<object>().ToList();
 			}
 		}

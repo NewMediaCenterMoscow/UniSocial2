@@ -70,7 +70,7 @@ namespace Worker.Blocks
 		{
 			return
 				new ActionBlock<Stream>(stream => {
-					using (var file = File.OpenWrite(Filename))
+					using (var file = File.Open(Filename, FileMode.Append, FileAccess.Write,FileShare.None))
 					{
 						stream.Seek(0, SeekOrigin.Begin);
 						stream.CopyTo(file);
@@ -79,13 +79,18 @@ namespace Worker.Blocks
 				});
 		}
 
-		public BatchBlock<T> Batch<T>(int BatchSize)
-		{
-			return 
-				new BatchBlock<T>(BatchSize);
-		}
 		#endregion
 
+		public BatchBlock<T> Batch<T>(CollectTask CollectTask)
+		{
+			var ninjectKernel = getKernelFor(CollectTask.SocialNetwork);
+			var apiRequest = ninjectKernel.Get<IApiRequest>();
+
+			var bacthSize = apiRequest.GetRequestBatchSize(CollectTask.Method);
+
+			return
+				new BatchBlock<T>(bacthSize);
+		}
 
 		public TransformBlock<string[], object> Process(CollectTask CollectTask)
 		{
@@ -93,16 +98,27 @@ namespace Worker.Blocks
 			var apiRequest = ninjectKernel.Get<IApiRequest>();
 
 			var method = CollectTask.Method;
-			return new TransformBlock<string[], object>(async ids => { 
-				
-				object result;
-				if (ids.Length == 1)
+			return new TransformBlock<string[], object>(async ids =>
+			{
+				var requestType = apiRequest.GetRequestType(method);
+
+				object result = null;
+				if (requestType == ApiRequestType.ObjectInfo)
+				{
 					result = await apiRequest.ExecuteRequest(method, ids[0]);
-				else
+				}
+				if (requestType == ApiRequestType.ListObjectsInfo)
+				{
 					result = await apiRequest.ExecuteRequest(method, ids.ToList());
+				}
+				if (requestType == ApiRequestType.ListForObject)
+				{
+					result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(CollectTask.Method));
+				}
 
 				return result;
 			});
+			//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
 		}
 
 		public TransformBlock<object, Stream> ToCSVStream()

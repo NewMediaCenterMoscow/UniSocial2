@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using Collector.Interface;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Worker.Common
 		{
 			var inputBlock = blockFactory.FileToStream();
 			var idsBlock = blockFactory.StremToIds();
-			var bacthBlock = blockFactory.Batch<string>(200);
+			var bacthBlock = blockFactory.Batch<string>(collectTask);
 			var processBlock = blockFactory.Process(collectTask);
 			var formatBlock = blockFactory.ToCSVStream();
 			var outputBlock = blockFactory.StreamToFile((collectTask.Output as CollectTaskIOFile).Filename);
