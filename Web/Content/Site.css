@@ -1,4 +1,11 @@
-﻿body {
-    /*padding-top: 60px;
-    padding-bottom: 40px;*/
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+.nav-tabs {
+	margin-bottom: 15px;
+}
+.main-content {
+	margin-top: 20px;
 }

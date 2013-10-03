@@ -1,0 +1,99 @@
+﻿@model Web.Models.CollectForm
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container main-content">
+
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+						<i class="icon-vk"></i> VK
+					</a>
+				</h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse in">
+				<div class="panel-body">
+
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#vk-users" data-toggle="tab">Users</a></li>
+						<li><a href="#vk-wall" data-toggle="tab">Wall</a></li>
+						<li><a href="#vk-groups" data-toggle="tab">Groups</a></li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade in active" id="vk-users">
+
+							@using (@Html.BeginForm("Index", "CollectTask", FormMethod.Post, new { enctype = "multipart/form-data" }))
+							{
+								@Html.ValidationSummary()
+
+								<div class="form-group">
+									<label>Select need data</label> <br />
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary">
+											@Html.RadioButtonFor(m => m.Method, "users.get") Information
+										</label>
+										<label class="btn btn-primary">
+											@Html.RadioButtonFor(m => m.Method, "users.getSubscriptions") Subscriptions
+										</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="inputFile">Select input file</label>
+									<input type="file" name="inputFile" id="inputFile">
+									<p class="help-block">File contains user ids separated by new line</p>
+								</div>
+
+								@Html.Hidden("network", "vk")
+
+								<button type="submit" class="btn btn-default">Start collect</button>
+
+							}
+
+
+						</div>
+						<div class="tab-pane fade" id="vk-wall">
+							<p>Not implemented</p>
+						</div>
+						<div class="tab-pane fade" id="vk-groups">
+							<p>Not implemented</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+						<i class="icon-facebook"></i> Facebook
+					</a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse">
+				<div class="panel-body">
+					Not implemented
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+						<i class="icon-twitter"></i> Twitter
+					</a>
+				</h4>
+			</div>
+			<div id="collapseThree" class="panel-collapse collapse">
+				<div class="panel-body">
+					Not implemented
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
