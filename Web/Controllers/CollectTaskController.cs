@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Web.Infrastructure;
 using Web.Models;
 using Worker.Model;
 
 namespace Web.Controllers
 {
-    public class CollectTaskController : Controller
+	public class CollectTaskController : UniSocialBaseController
     {
         public ActionResult Index()
         {
@@ -21,7 +22,8 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				sendCollectInQueue(collectForm);
+				var ct = wkComm.CreateCollectTask(collectForm);
+				wkComm.SendTaskToQueue(ct);
 
 				return RedirectToAction("CollectStarted");
 			}
@@ -32,33 +34,10 @@ namespace Web.Controllers
 		
 		public ActionResult CollectStarted()
 		{
-			return View();
+			var collectWork = wkComm.GetCollectTaskCount();
+			return View((object)collectWork);
 		}
 
-
-		void sendCollectInQueue(CollectForm collectForm)
-		{
-			CollectTask ct = new CollectTask(collectForm.Network, collectForm.Method);
-			var inputFile = moveInputFile(collectForm);
-
-
-
-
-		}
-
-		string moveInputFile(CollectForm collectForm)
-		{
-			var directory = @"C:\temp\collect";
-			var fileName = collectForm.InputFile.FileName;
-			var fullName = Path.Combine(directory, fileName);
-
-			using (var file = System.IO.File.OpenWrite(fullName))
-			{
-				collectForm.InputFile.InputStream.CopyTo(file);
-			}
-
-			return fullName;
-		}
 
 	}
 }

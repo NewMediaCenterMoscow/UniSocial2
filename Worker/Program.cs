@@ -19,70 +19,90 @@ namespace Worker
 	{
 		public static TraceSource Trace = new TraceSource("primes");
 
+		static MessageQueue inputQueue;
+		static MessageQueue outputQueue;
+
 		static void Main(string[] args)
 		{
-			//var appSettings = ConfigurationManager.AppSettings;
-			//string queueName = appSettings["inputQueue"];
+			var appSettings = ConfigurationManager.AppSettings;
 
-			//Trace.TraceInformation("Input queue name: {0}", queueName);
+			string inputQueueName = appSettings["inputQueue"];
+			string outputQueueName = appSettings["outputQueue"];
+			createQueues(inputQueueName, outputQueueName);
+			Trace.TraceInformation("Queue names: {0}, {1}", inputQueueName, outputQueueName);
 
-			//var task = Task.Factory.StartNew(() => mainLoop(queueName));
-			//task.Wait();
+			var task = Task.Factory.StartNew(mainLoop);
+			Console.ReadLine();
 
-			var task = TestWork();
-			task.Wait();
+			//var t = TestWork();
+			//t.Wait();
 		}
 
 
-		static void mainLoop(string queueName)
+		static void mainLoop()
 		{
-				MessageQueue queue;
+			var ninject = new StandardKernel(new NinjectModules.Worker());
+			var dataCollector = ninject.Get<DataCollector>();
 
-				if (MessageQueue.Exists(queueName))
-					queue = new MessageQueue(queueName);
-				else
-					queue = MessageQueue.Create(queueName);
-				queue.Formatter = new BinaryMessageFormatter();
+			while (true)
+			{
+				var receiveMessage = inputQueue.Receive();
+				var receiveMessageBody = receiveMessage.Body;
 
-				var ninject = new StandardKernel(new NinjectModules.Worker());
-				var dataCollector = ninject.Get<DataCollector>();
+				Trace.TraceInformation("Receive message: {0}", receiveMessageBody);
 
-				while (true)
+				if (receiveMessageBody is string)
 				{
-					var receiveMessage = queue.Receive();
-					var receiveMessageBody = receiveMessage.Body;
-
-					Trace.TraceInformation("Receive message: {0}", receiveMessageBody);
-
-					if (receiveMessageBody is string)
+					string cmd = (string)receiveMessageBody;
+					if (cmd == "exit")
 					{
-						string cmd = (string)receiveMessageBody;
-						if (cmd == "exit")
-							return;
+						return;
 					}
-					else if (receiveMessageBody is CollectTask)
+					if (cmd == "taskcount")
 					{
-						var collectTask = receiveMessageBody as CollectTask;
-
-						Trace.TraceEvent(TraceEventType.Start, collectTask.GetHashCode(), collectTask.ToString());
-
-						var task = dataCollector.Collect(collectTask);
-
-						task.ContinueWith(
-							t =>
-							{
-								if (t.IsFaulted)
-								{
-									Trace.TraceEvent(TraceEventType.Error, collectTask.GetHashCode(), "Inner expection");
-								}
-
-								Trace.TraceEvent(TraceEventType.Stop, collectTask.GetHashCode(), collectTask.ToString());
-							}
-						);
+						outputQueue.Send(5);
 					}
 				}
+				else if (receiveMessageBody is CollectTask)
+				{
+					var collectTask = receiveMessageBody as CollectTask;
+
+					Trace.TraceEvent(TraceEventType.Start, collectTask.GetHashCode(), collectTask.ToString());
+
+					var task = dataCollector.Collect(collectTask);
+
+					task.ContinueWith(
+						t =>
+						{
+							if (t.IsFaulted)
+							{
+								Trace.TraceEvent(TraceEventType.Error, collectTask.GetHashCode(), t.Exception.Message);
+								collectTask.ErrorMessage = t.Exception.Message;
+							}
+
+							collectTask.IsCompleted = true;
+							Trace.TraceEvent(TraceEventType.Stop, collectTask.GetHashCode(), collectTask.ToString());
+						}
+					);
+				}
+			}
 
 		}
+
+		private static void createQueues(string inputQueueName, string outputQueueName)
+		{
+			createQueue(ref inputQueue, inputQueueName);
+			createQueue(ref outputQueue, outputQueueName);
+		}
+		private static void createQueue(ref MessageQueue queue, string inputQueueName)
+		{
+			if (MessageQueue.Exists(inputQueueName))
+				queue = new MessageQueue(inputQueueName);
+			else
+				queue = MessageQueue.Create(inputQueueName);
+			queue.Formatter = new BinaryMessageFormatter();
+		}
+
 
 		static async Task TestWork()
 		{

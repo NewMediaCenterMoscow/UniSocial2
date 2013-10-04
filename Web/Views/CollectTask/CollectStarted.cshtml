@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Int32
+
+@{
     ViewBag.Title = "Collect";
 }
 
@@ -13,6 +15,10 @@
 		<p>It may take a several hours...</p>
 		<p><a class="btn btn-primary btn-lg">Go to dashboard &raquo;</a></p>
 	</div>
+</div>
+
+<div class="container">
+	Tasks: @Model
 </div>
 
 

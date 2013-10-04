@@ -18,6 +18,8 @@ namespace Worker.Blocks
 		[Inject]
 		public TraceSource Trace { get; set; }
 
+		static long counter;
+		static long all;
 
 		public BlockFactory()
 		{
@@ -59,7 +61,14 @@ namespace Worker.Blocks
 					StreamReader reader = new StreamReader(input);
 					string result = reader.ReadToEnd();
 
-					return result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+					input.Close();
+
+					var ret = result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+					all = ret.Length;
+					counter = 0;
+
+					return ret;
 				});
 		}
 
@@ -106,6 +115,10 @@ namespace Worker.Blocks
 			var method = CollectTask.Method;
 			return new TransformBlock<string[], object>(async ids =>
 			{
+				counter += ids.Length;
+				if(counter % 64 == 0)
+					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + counter +"/" + all);
+
 				var requestType = apiRequest.GetRequestType(method);
 
 				object result = null;

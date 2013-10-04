@@ -17,10 +17,37 @@ namespace Worker.Common
 		{
 			formatters = new Dictionary<Type,Action<object, StreamWriter>>();
 
-			//formatters.Add(typeof(VkUser), (o,s) =>{
-			//	var obj = o as VkUser;
-			//	s.WriteLine(obj.FirstName);
-			//});
+			formatters.Add(typeof(VkUser), (o, s) =>
+			{
+				var obj = o as VkUser;
+
+				s.Write("\""); s.Write(obj.Id); s.Write("\",");
+				s.Write("\""); s.Write(obj.FirstName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.LastName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+				s.Write("\""); s.Write(obj.Nickname != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+				
+				s.Write("\""); s.Write((int)obj.Sex); s.Write("\",");
+				s.Write("\""); s.Write(obj.BDate); s.Write("\",");
+				s.Write("\""); s.Write(obj.City); s.Write("\",");
+				s.Write("\""); s.Write(obj.Country); s.Write("\",");
+				s.Write("\""); s.Write(obj.Timezone); s.Write("\",");
+
+				s.Write("\""); s.Write(obj.Photo50); s.Write("\",");
+				s.Write("\""); s.Write(obj.Photo100); s.Write("\",");
+				s.Write("\""); s.Write(obj.PhotoMaxOrig); s.Write("\",");
+
+				s.Write("\""); s.Write(obj.HasMobile); s.Write("\",");
+				s.Write("\""); s.Write(obj.HomePhone); s.Write("\",");
+				s.Write("\""); s.Write(obj.MobilePhone); s.Write("\",");
+
+				s.Write("\""); s.Write(obj.University); s.Write("\",");
+				s.Write("\""); s.Write(obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.Faculty); s.Write("\",");
+				s.Write("\""); s.Write(obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.Graduation); s.Write("\"\n");
+			});
+
 			formatters.Add(typeof(VkGroup), (o, s) =>
 			{
 				var obj = o as VkGroup;
@@ -33,6 +60,7 @@ namespace Worker.Common
 				s.Write("\""); s.Write(obj.MembersCount);				s.Write("\"\n");
 
 			});
+
 			formatters.Add(typeof(VkPost), (o, s) =>
 			{
 				var obj = o as VkPost;
@@ -47,8 +75,10 @@ namespace Worker.Common
 				if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
 				{
 					var copyPost = obj.CopyHistory.First();
+
 					s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
 					s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
+					s.Write("\""); s.Write(copyPost.Id); s.Write("\",");
 					s.Write("\""); s.Write(obj.Text); s.Write("\"");
 				}
 				else

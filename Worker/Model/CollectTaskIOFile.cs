@@ -11,12 +11,17 @@ namespace Worker.Model
 	public class CollectTaskIOFile : CollectTaskIO
 	{
 		protected string _filename;
+		public string Filename { get { return _filename; } }
 
 		public CollectTaskIOFile(string Filename)
 		{
 			_filename = Filename;
 		}
 
-		public string Filename { get { return _filename; } }
+		public override string ToString()
+		{
+			return "File: " + _filename;
+		}
+
 	}
 }

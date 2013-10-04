@@ -25,7 +25,7 @@ namespace Collector.Api
 			);
 			requestParams.Add("users.get",
 				new ApiRequestParam(new Dictionary<string, string>() {
-					{ "fields", "sex,bdate,city,country" } 
+					{ "fields", "education,contacts,nickname, screen_name, sex, bdate, city, country, timezone, photo_50, photo_100, photo_200, photo_max, has_mobile, online" } 
 				})
 			);
 			requestParams.Add("wall.get",

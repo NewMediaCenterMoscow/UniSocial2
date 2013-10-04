@@ -55,7 +55,7 @@ namespace Collector.Api
 			var result = JObject.Parse(data);
 
 			//Trace.TraceInformation("Request success: " + Method);
-			Trace.TraceEvent(TraceEventType.Information, requestNumber++, "Request success: " + Method);
+			//Trace.TraceEvent(TraceEventType.Information, requestNumber++, "Request success: " + Method);
 
 			return result;
 		}
