@@ -59,6 +59,8 @@
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -126,6 +128,11 @@
     <Compile Include="Infrastructure\WorkerCommunication.cs" />
     <Compile Include="Models\CollectForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\UniSocialService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\bootstrap-theme.css" />
@@ -146,6 +153,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Properties\DataSources\Worker.Model.CollectTask.datasource" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -153,6 +161,13 @@
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
+    <None Include="Service References\UniSocialService\item.disco" />
+    <None Include="Service References\UniSocialService\configuration91.svcinfo" />
+    <None Include="Service References\UniSocialService\configuration.svcinfo" />
+    <None Include="Service References\UniSocialService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -168,6 +183,16 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\CollectTask\Index.cshtml" />
     <Content Include="Views\CollectTask\CollectStarted.cshtml" />
+    <None Include="Service References\UniSocialService\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UniSocialService\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UniSocialService\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UniSocialService\UniSocialService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -181,6 +206,12 @@
       <Project>{9bcd8c4f-084d-46dd-8be5-68c3622eb9a9}</Project>
       <Name>Worker</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\UniSocialService\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

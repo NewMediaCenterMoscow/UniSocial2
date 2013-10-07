@@ -69,20 +69,24 @@ namespace Worker.Common
 				s.Write("\""); s.Write(obj.ToId); s.Write("\",");
 				s.Write("\""); s.Write(obj.FromId); s.Write("\",");
 				s.Write("\""); s.Write(obj.Date); s.Write("\",");
-				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
 
 				if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
 				{
 					var copyPost = obj.CopyHistory.First();
 
+					s.Write("\""); s.Write(copyPost.Text.Replace("\"", "\"\"")); s.Write("\","); // Text - from copy post
+					s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+
 					s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
 					s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
 					s.Write("\""); s.Write(copyPost.Id); s.Write("\",");
-					s.Write("\""); s.Write(obj.Text); s.Write("\"");
+					s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\"");
 				}
 				else
 				{
+					s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
+					s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+
 					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_dae
 					s.Write("\""); s.Write(0); s.Write("\","); // copy_owner_id
 					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_id

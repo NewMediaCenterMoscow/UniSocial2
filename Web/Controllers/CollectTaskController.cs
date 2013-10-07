@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Infrastructure;
@@ -32,9 +33,9 @@ namespace Web.Controllers
 		}
 
 		
-		public ActionResult CollectStarted()
+		public async Task<ActionResult> CollectStarted()
 		{
-			var collectWork = wkComm.GetCollectTaskCount();
+			var collectWork = await wkComm.GetCollectTaskCount();
 			return View((object)collectWork);
 		}
 

@@ -4,8 +4,10 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Messaging;
+using System.Threading.Tasks;
 using System.Web;
 using Web.Models;
+using Web.UniSocialService;
 using Worker.Model;
 
 namespace Web.Infrastructure
@@ -13,21 +15,26 @@ namespace Web.Infrastructure
 	class WorkerCommunication
 	{
 		string directory;
-		MessageQueue queue;
-		MessageQueue queueResponse;
+		//MessageQueue queue;
+		//MessageQueue queueResponse;
+
+		UniSocialClient uniSocialClient;
 
 		public WorkerCommunication()
 		{
 			var appSettings = ConfigurationManager.AppSettings;
 
 			directory = appSettings["fileDirectory"];
-			string queueName = appSettings["inputQueue"];
-			string inputQueueName = appSettings["outputQueue"]; // relative to Worker
 
-			queue = new MessageQueue(queueName);
-			queue.Formatter = new BinaryMessageFormatter();
-			queueResponse = new MessageQueue(inputQueueName);
-			queueResponse.Formatter = new BinaryMessageFormatter();
+			uniSocialClient = new UniSocialClient();
+
+			//string queueName = appSettings["inputQueue"];
+			//string inputQueueName = appSettings["outputQueue"]; // relative to Worker
+
+			//queue = new MessageQueue(queueName);
+			//queue.Formatter = new BinaryMessageFormatter();
+			//queueResponse = new MessageQueue(inputQueueName);
+			//queueResponse.Formatter = new BinaryMessageFormatter();
 		}
 
 		public CollectTask CreateCollectTask(CollectForm collectForm)
@@ -44,7 +51,8 @@ namespace Web.Infrastructure
 
 		public void SendTaskToQueue(CollectTask ct)
 		{
-			queue.Send(ct);
+			uniSocialClient.StartNewTask(ct);
+			//queue.Send(ct);
 		}
 
 		string moveInputFile(HttpPostedFileBase inputFile)
@@ -58,13 +66,15 @@ namespace Web.Infrastructure
 		}
 
 
-		public int GetCollectTaskCount()
+		public async Task<int> GetCollectTaskCount()
 		{
-			queue.Send("taskcount");
+			//queue.Send("taskcount");
 
-			var res = queueResponse.Receive();
+			//var res = queueResponse.Receive();
 
-			return (int)res.Body;
+			//return (int)res.Body;
+
+			return await uniSocialClient.GetCurrentTaskCountAsync();
 		}
 	
 	}

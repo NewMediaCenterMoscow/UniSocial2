@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Worker.Blocks;
+using Worker.Service;
 
 namespace Worker.NinjectModules
 {
