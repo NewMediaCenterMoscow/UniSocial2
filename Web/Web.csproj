@@ -168,14 +168,18 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -198,20 +202,16 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Collector\Collector.csproj">
-      <Project>{6afe7dbe-287d-4fb1-bc01-490739c9ef0d}</Project>
-      <Name>Collector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Worker\Worker.csproj">
-      <Project>{9bcd8c4f-084d-46dd-8be5-68c3622eb9a9}</Project>
-      <Name>Worker</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\UniSocialService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Worker\Worker.csproj">
+      <Project>{9bcd8c4f-084d-46dd-8be5-68c3622eb9a9}</Project>
+      <Name>Worker</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

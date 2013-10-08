@@ -31,9 +31,10 @@ namespace Worker.Common
 		public async Task Collect(CollectTask collectTask)
 		{
 			var inputBlock = blockFactory.FileToStream();
-			var idsBlock = blockFactory.StremToIds();
+			var idsBlock = blockFactory.StremToIds(collectTask);
 			var bacthBlock = blockFactory.Batch<string>(collectTask);
 			var processBlock = blockFactory.Process(collectTask);
+
 			var formatBlock = blockFactory.ToCSVStream();
 			var outputBlock = blockFactory.StreamToFile((collectTask.Output as CollectTaskIOFile).Filename);
 

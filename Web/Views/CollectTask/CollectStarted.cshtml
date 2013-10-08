@@ -1,7 +1,5 @@
-﻿@model Int32
-
-@{
-    ViewBag.Title = "Collect";
+﻿@{
+    ViewBag.Title = "Collect started";
 }
 
 @*<div class="container main-content">
@@ -13,12 +11,12 @@
 	<div class="container">
 		<h1>Collect started!</h1>
 		<p>It may take a several hours...</p>
-		<p><a class="btn btn-primary btn-lg">Go to dashboard &raquo;</a></p>
+		<p>@Html.ActionLink("Go to home page »", "Index", new { controller = "Home" }, new { @class = "btn btn-primary btn-lg" })</p>
 	</div>
 </div>
 
 <div class="container">
-	Tasks: @Model
+	
 </div>
 
 

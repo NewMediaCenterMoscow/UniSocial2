@@ -15,9 +15,6 @@ namespace Worker.Service
 		void StartNewTask(CollectTask CollectTask);
 
 		[OperationContract]
-		List<CollectTask> GetTasks();
-
-		[OperationContract]
-		int GetCurrentTaskCount();
+		List<CollectTask> GetCurrentTasks();
 	}
 }

@@ -7,7 +7,6 @@ using System.Web;
 using System.Web.Mvc;
 using Web.Infrastructure;
 using Web.Models;
-using Worker.Model;
 
 namespace Web.Controllers
 {
@@ -33,10 +32,9 @@ namespace Web.Controllers
 		}
 
 		
-		public async Task<ActionResult> CollectStarted()
+		public ActionResult CollectStarted()
 		{
-			var collectWork = await wkComm.GetCollectTaskCount();
-			return View((object)collectWork);
+			return View();
 		}
 
 

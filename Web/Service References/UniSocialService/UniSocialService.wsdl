@@ -13,30 +13,20 @@
   <wsdl:message name="IUniSocial_StartNewTask_OutputMessage">
     <wsdl:part name="parameters" element="tns:StartNewTaskResponse" />
   </wsdl:message>
-  <wsdl:message name="IUniSocial_GetTasks_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetTasks" />
+  <wsdl:message name="IUniSocial_GetCurrentTasks_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentTasks" />
   </wsdl:message>
-  <wsdl:message name="IUniSocial_GetTasks_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetTasksResponse" />
-  </wsdl:message>
-  <wsdl:message name="IUniSocial_GetCurrentTaskCount_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentTaskCount" />
-  </wsdl:message>
-  <wsdl:message name="IUniSocial_GetCurrentTaskCount_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentTaskCountResponse" />
+  <wsdl:message name="IUniSocial_GetCurrentTasks_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentTasksResponse" />
   </wsdl:message>
   <wsdl:portType name="IUniSocial">
     <wsdl:operation name="StartNewTask">
       <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/StartNewTask" message="tns:IUniSocial_StartNewTask_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/StartNewTaskResponse" message="tns:IUniSocial_StartNewTask_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetTasks">
-      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/GetTasks" message="tns:IUniSocial_GetTasks_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/GetTasksResponse" message="tns:IUniSocial_GetTasks_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetCurrentTaskCount">
-      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTaskCount" message="tns:IUniSocial_GetCurrentTaskCount_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTaskCountResponse" message="tns:IUniSocial_GetCurrentTaskCount_OutputMessage" />
+    <wsdl:operation name="GetCurrentTasks">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTasks" message="tns:IUniSocial_GetCurrentTasks_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTasksResponse" message="tns:IUniSocial_GetCurrentTasks_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IUniSocial" type="tns:IUniSocial">
@@ -50,17 +40,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetTasks">
-      <soap:operation soapAction="http://tempuri.org/IUniSocial/GetTasks" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetCurrentTaskCount">
-      <soap:operation soapAction="http://tempuri.org/IUniSocial/GetCurrentTaskCount" style="document" />
+    <wsdl:operation name="GetCurrentTasks">
+      <soap:operation soapAction="http://tempuri.org/IUniSocial/GetCurrentTasks" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

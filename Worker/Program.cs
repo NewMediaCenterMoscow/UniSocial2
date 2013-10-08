@@ -51,7 +51,6 @@ namespace Worker
 			{
 				Trace.TraceEvent(TraceEventType.Information, 0, "Service is ready");
 
-	
 				Console.ReadLine();
 				selfHost.Close();
 			}

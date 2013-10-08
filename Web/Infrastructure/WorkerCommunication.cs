@@ -15,8 +15,6 @@ namespace Web.Infrastructure
 	class WorkerCommunication
 	{
 		string directory;
-		//MessageQueue queue;
-		//MessageQueue queueResponse;
 
 		UniSocialClient uniSocialClient;
 
@@ -28,14 +26,7 @@ namespace Web.Infrastructure
 
 			uniSocialClient = new UniSocialClient();
 
-			//string queueName = appSettings["inputQueue"];
-			//string inputQueueName = appSettings["outputQueue"]; // relative to Worker
-
-			//queue = new MessageQueue(queueName);
-			//queue.Formatter = new BinaryMessageFormatter();
-			//queueResponse = new MessageQueue(inputQueueName);
-			//queueResponse.Formatter = new BinaryMessageFormatter();
-		}
+		}   
 
 		public CollectTask CreateCollectTask(CollectForm collectForm)
 		{
@@ -52,7 +43,11 @@ namespace Web.Infrastructure
 		public void SendTaskToQueue(CollectTask ct)
 		{
 			uniSocialClient.StartNewTask(ct);
-			//queue.Send(ct);
+		}
+
+		public List<CollectTask> GetCurrentTasks()
+		{
+			return uniSocialClient.GetCurrentTasks();
 		}
 
 		string moveInputFile(HttpPostedFileBase inputFile)
@@ -66,16 +61,5 @@ namespace Web.Infrastructure
 		}
 
 
-		public async Task<int> GetCollectTaskCount()
-		{
-			//queue.Send("taskcount");
-
-			//var res = queueResponse.Receive();
-
-			//return (int)res.Body;
-
-			return await uniSocialClient.GetCurrentTaskCountAsync();
-		}
-	
 	}
 }

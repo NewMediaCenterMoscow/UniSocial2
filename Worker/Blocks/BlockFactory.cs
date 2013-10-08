@@ -18,9 +18,6 @@ namespace Worker.Blocks
 		[Inject]
 		public TraceSource Trace { get; set; }
 
-		static long counter;
-		static long all;
-
 		public BlockFactory()
 		{
 			createNinjectModules();
@@ -54,7 +51,7 @@ namespace Worker.Blocks
 
 
 		#region Common blocks
-		public TransformManyBlock<Stream, string> StremToIds()
+		public TransformManyBlock<Stream, string> StremToIds(CollectTask collectTask)
 		{
 			return 
 				new TransformManyBlock<Stream, string>(input => {
@@ -65,8 +62,8 @@ namespace Worker.Blocks
 
 					var ret = result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-					all = ret.Length;
-					counter = 0;
+					collectTask.AllItems = ret.Length;
+					collectTask.CounterItems = 0;
 
 					return ret;
 				});
@@ -115,9 +112,12 @@ namespace Worker.Blocks
 			var method = CollectTask.Method;
 			return new TransformBlock<string[], object>(async ids =>
 			{
-				counter += ids.Length;
-				if(counter % 64 == 0)
-					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + counter +"/" + all);
+				//counter += ids.Length;
+				//if(counter % 64 == 0)
+				//	Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + counter +"/" + all);
+				CollectTask.CounterItems += ids.Length;
+				if (CollectTask.CounterItems % 64 == 0)
+					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + CollectTask.CounterItems + "/" + CollectTask.AllItems);
 
 				var requestType = apiRequest.GetRequestType(method);
 

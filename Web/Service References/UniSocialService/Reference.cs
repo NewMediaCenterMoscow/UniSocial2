@@ -16,22 +16,17 @@ namespace Web.UniSocialService {
     public interface IUniSocial {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/StartNewTask", ReplyAction="http://tempuri.org/IUniSocial/StartNewTaskResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Worker.Model.CollectTaskIOFile))]
         void StartNewTask(Worker.Model.CollectTask CollectTask);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/StartNewTask", ReplyAction="http://tempuri.org/IUniSocial/StartNewTaskResponse")]
         System.Threading.Tasks.Task StartNewTaskAsync(Worker.Model.CollectTask CollectTask);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetTasks", ReplyAction="http://tempuri.org/IUniSocial/GetTasksResponse")]
-        System.Collections.Generic.List<Worker.Model.CollectTask> GetTasks();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTasks", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTasksResponse")]
+        System.Collections.Generic.List<Worker.Model.CollectTask> GetCurrentTasks();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetTasks", ReplyAction="http://tempuri.org/IUniSocial/GetTasksResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetTasksAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTaskCount", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTaskCountResponse")]
-        int GetCurrentTaskCount();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTaskCount", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTaskCountResponse")]
-        System.Threading.Tasks.Task<int> GetCurrentTaskCountAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTasks", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTasksResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetCurrentTasksAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -69,20 +64,12 @@ namespace Web.UniSocialService {
             return base.Channel.StartNewTaskAsync(CollectTask);
         }
         
-        public System.Collections.Generic.List<Worker.Model.CollectTask> GetTasks() {
-            return base.Channel.GetTasks();
+        public System.Collections.Generic.List<Worker.Model.CollectTask> GetCurrentTasks() {
+            return base.Channel.GetCurrentTasks();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetTasksAsync() {
-            return base.Channel.GetTasksAsync();
-        }
-        
-        public int GetCurrentTaskCount() {
-            return base.Channel.GetCurrentTaskCount();
-        }
-        
-        public System.Threading.Tasks.Task<int> GetCurrentTaskCountAsync() {
-            return base.Channel.GetCurrentTaskCountAsync();
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetCurrentTasksAsync() {
+            return base.Channel.GetCurrentTasksAsync();
         }
     }
 }

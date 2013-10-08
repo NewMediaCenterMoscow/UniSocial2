@@ -1,13 +1,32 @@
-﻿@{
-    ViewBag.Title = "Home Page";  
+﻿@model List<CollectTask>
+
+@{
+	ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
 	<div class="container">
-		<h1>Current collect tasks</h1>
-		<p>Bla-bla-bla</p>
-		<p><a class="btn btn-primary btn-lg">Go to dashboard &raquo;</a></p>
+
+		@if (Model.Count > 0)
+		{
+			<h1>Current collect tasks</h1>
+			<ul>
+				@foreach (var item in Model)
+				{
+					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)%</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<h1>All task is done!</h1>
+			<p>
+				To create new task, go to Collect page
+			</p>
+		}
+		<p>@Html.ActionLink("New task »", "Index", new { controller = "CollectTask" }, new { @class = "btn btn-primary btn-lg" })</p>
 	</div>
+
 </div>
 
 <div class="container">

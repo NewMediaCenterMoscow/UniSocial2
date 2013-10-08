@@ -22,10 +22,19 @@ namespace Worker.Model
 		[DataMember]
 		public string Method { get { return _method; } protected set { _method = value; } }
 
+		#region Progress & Error message
 		[DataMember]
 		public bool IsCompleted { get; set; }
+
+		[DataMember]
+		public long AllItems { get; set; }
+		[DataMember]
+		public long CounterItems { get; set; }
+
 		[DataMember]
 		public string ErrorMessage { get; set; }
+		#endregion
+
 
 		[DataMember]
 		public CollectTaskIO Input { get; set; }
@@ -48,7 +57,14 @@ namespace Worker.Model
 
 		public override string ToString()
 		{
-			return _socialNetworks + ":" + _method;
+			var res = _socialNetworks + ": " + _method;
+
+			//if (AllItems != 0)
+			//	res += " [" + Math.Round((double)CounterItems / AllItems * 100, 2) + "%]";
+
+			res += " - " + Input.ToString();
+
+			return res;
 		}
 	}
 }

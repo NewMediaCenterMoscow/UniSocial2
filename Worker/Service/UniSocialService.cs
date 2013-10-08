@@ -45,18 +45,14 @@ namespace Worker.Service
 					}
 
 					CollectTask.IsCompleted = true;
+					tasks.Remove(CollectTask);
 					Trace.TraceEvent(TraceEventType.Stop, CollectTask.GetHashCode(), CollectTask.ToString());
 				}
 			);
 
 		}
 
-		public int GetCurrentTaskCount()
-		{
-			return tasks.Count(ct => !ct.IsCompleted);
-		}
-
-		public List<CollectTask> GetTasks()
+		public List<CollectTask> GetCurrentTasks()
 		{
 			return tasks;
 		}
