@@ -33,6 +33,7 @@ namespace Worker.Service
 		{
 			tasks.Add(CollectTask);
 
+			Trace.TraceEvent(TraceEventType.Start, CollectTask.GetHashCode(), CollectTask.ToString());
 			var task = dataCollector.Collect(CollectTask);
 
 			task.ContinueWith(

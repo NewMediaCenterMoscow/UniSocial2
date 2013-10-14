@@ -12,19 +12,36 @@ namespace Collector.Api
 {
 	public class VkApi : BaseApi
 	{
-		//string authUrl = "https://oauth.vk.com/authorize?client_id=3813980&scope=offline&redirect_uri=https://oauth.vk.com/blank.html&display=page&v=5&response_type=token";
-		//string appId = "3813980";
-		//string clientSecret = "wWFYljF9nBfMl6f7rdUm";
+		//string authUrl = "https://oauth.vk.com/authorize?client_id=3813980&scope=offline,wall&redirect_uri=https://oauth.vk.com/blank.html&display=page&v=5&response_type=token";
+//		string appId = "3813980";
+//		string clientSecret = "wWFYljF9nBfMl6f7rdUm";
+
+//		string authUrl = @"https://oauth.vk.com/authorize? 
+// client_id=APP_ID& 
+// scope=PERMISSIONS& 
+// redirect_uri=REDIRECT_URI& 
+// display=DISPLAY& 
+// v=API_VERSION& 
+// response_type=token";
 
 		string apiVersion = "5";
-		string authToken = "8fbcaaf861ba2d5fadaafa4c73fdcc8a56f891b1d08fb72253cba7a90ccbeede8e9fc024f52c5ff49e8a8";
+		string authToken = "031a1692f3b80a180429bca8d58533f6b35716f44bd4df6d86ca53855f7f40f3e755a576a6a722f80a89b";
 
 		List<string> methodNeedAuth = new List<string>() {
+			"getReposts"
 		};
 
 		public VkApi()
 		{
 			this.baseUri = "https://api.vk.com/method/";
+
+			//authUrl = authUrl
+			//	.Replace("APP_ID", appId)
+			//	.Replace("PERMISSIONS", "offline")
+			//	.Replace("REDIRECT_URI", "https://oauth.vk.com/blank.html")
+			//	.Replace("DISPLAY", "page")
+			//	.Replace("API_VERSION", apiVersion)
+			//	;
 		}
 
 		protected override StringBuilder formatUri(string Method, Dictionary<string, string> Params)

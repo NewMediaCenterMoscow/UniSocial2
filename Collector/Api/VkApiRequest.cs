@@ -17,6 +17,13 @@ namespace Collector.Api
 			objectTypeForMethods.Add("users.getSubscriptions", typeof(VkUserSubscriptions));
 			objectTypeForMethods.Add("users.get", typeof(VkUser));
 			objectTypeForMethods.Add("wall.get", typeof(VkPost));
+			objectTypeForMethods.Add("wall.getReposts", typeof(VkPost));
+
+			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
+			requestTypes.Add("users.getSubscriptions", ApiRequestType.ListForObject);
+			requestTypes.Add("users.get", ApiRequestType.ListObjectsInfo);
+			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
+			requestTypes.Add("wall.getReposts", ApiRequestType.ListForObject);
 
 			requestParams.Add("groups.getById",
 				new ApiRequestParam(new Dictionary<string, string>() {
@@ -34,12 +41,8 @@ namespace Collector.Api
 				})
 			);
 
-			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
-			requestTypes.Add("users.getSubscriptions", ApiRequestType.ListForObject);
-			requestTypes.Add("users.get", ApiRequestType.ListObjectsInfo);
-			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
-
 			itemsMaxCounts.Add("wall.get", 100);
+			itemsMaxCounts.Add("wall.getReposts", 1000);
 			itemsMaxCounts.Add("users.getSubscriptions", 200);
 
 			batchSizes.Add("users.get", 300);
@@ -74,6 +77,11 @@ namespace Collector.Api
 						requestParam.Params["owner_id"] = lId.ToString();
 					else
 						requestParam.Params["domain"] = id;
+					break;
+				case "wall.getReposts":
+					var ids = id.Split('_'); // 0 - owner_id, 1 - post_id
+					requestParam.Params["owner_id"] = ids[0];
+					requestParam.Params["post_id"] = ids[1];
 					break;
 				default:
 					throw new NotSupportedException("Method `" + requestParam.Method + "` is not supported!");

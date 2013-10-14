@@ -66,6 +66,9 @@
 										<label class="btn btn-primary">
 											@Html.RadioButtonFor(m => m.Method, "wall.get") Post
 										</label>
+										<label class="btn btn-primary">
+											@Html.RadioButtonFor(m => m.Method, "wall.getReposts") Reposts
+										</label>
 									</div>
 								</div>
 								<div class="form-group">
@@ -94,7 +97,7 @@
 										</label>
 									</div>
 								</div>
-								
+
 								<div class="form-group">
 									<label for="inputFile">Select input file</label>
 									<input type="file" name="inputFile" id="inputFile">

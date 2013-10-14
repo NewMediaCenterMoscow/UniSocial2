@@ -154,6 +154,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="Properties\DataSources\Worker.Model.CollectTask.datasource" />
+    <None Include="Properties\PublishProfiles\VS2013-IPK-NMC.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

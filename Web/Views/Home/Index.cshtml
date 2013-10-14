@@ -13,7 +13,8 @@
 			<ul>
 				@foreach (var item in Model)
 				{
-					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)%</li>
+					var output = (item.Output as CollectTaskIOFile).Filename;
+					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)% - output: @output</li>
 				}
 			</ul>
 		}
@@ -33,4 +34,4 @@
 
 	test
 
-</div><!-- /.container -->
+</div>
