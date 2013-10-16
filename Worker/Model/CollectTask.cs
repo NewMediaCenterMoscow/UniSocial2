@@ -46,6 +46,9 @@ namespace Worker.Model
 			_method = Method;
 
 			IsCompleted = false;
+
+			AllItems = 0;
+			CounterItems = 0;
 		}
 		public CollectTask(string SocialNetwork, string Method)
 		{

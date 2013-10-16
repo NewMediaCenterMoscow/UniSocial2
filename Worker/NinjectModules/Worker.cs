@@ -16,8 +16,8 @@ namespace Worker.NinjectModules
 		{
 			Bind<TraceSource>().ToConstant(Program.Trace);
 
-			Bind<BlockFactory>().To<BlockFactory>();
-			Bind<BlockController>().To<BlockController>();
+			//Bind<BlockFactory>().To<BlockFactory>();
+			//Bind<BlockController>().To<BlockController>();
 		}
 	}
 }

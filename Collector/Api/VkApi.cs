@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Collector.Api
 // response_type=token";
 
 		string apiVersion = "5";
-		string authToken = "031a1692f3b80a180429bca8d58533f6b35716f44bd4df6d86ca53855f7f40f3e755a576a6a722f80a89b";
+		string authToken;
 
 		List<string> methodNeedAuth = new List<string>() {
 			"getReposts"
@@ -34,6 +35,10 @@ namespace Collector.Api
 		public VkApi()
 		{
 			this.baseUri = "https://api.vk.com/method/";
+
+			var appSettings = ConfigurationManager.AppSettings;
+
+			authToken = appSettings["vkAuthToken"];
 
 			//authUrl = authUrl
 			//	.Replace("APP_ID", appId)
@@ -44,20 +49,27 @@ namespace Collector.Api
 			//	;
 		}
 
+		bool isMethodNeedAuth(string method)
+		{
+			foreach (var m in methodNeedAuth)
+			{
+				if (method.EndsWith(m))
+				{
+					return true;
+				}
+			}
+
+ 			return false;
+		}
+
 		protected override StringBuilder formatUri(string Method, Dictionary<string, string> Params)
 		{
 			var sb = base.formatUri(Method, Params);
 
 			sb.Append("&v=").Append(apiVersion);
 
-			foreach (var m in methodNeedAuth)
-			{
-				if (Method.EndsWith(m))
-				{
-					sb.Append("&access_token=").Append(authToken);
-					break;
-				}
-			}
+			if (isMethodNeedAuth(Method))
+				 sb.Append("&access_token=").Append(authToken);
 
 			return sb;
 		}
@@ -69,7 +81,6 @@ namespace Collector.Api
 			try
 			{
 				result = await base.ExecuteRequest(Method, Params);
-
 			}
 			catch (TaskCanceledException)
 			{
@@ -78,7 +89,7 @@ namespace Collector.Api
 				Thread.Sleep(60000);
 			}
 
-			if (result["error"] != null)
+			if (result != null && result["error"] != null)
 			{
 				var errorCode = (int)result["error"]["error_code"];
 				if (errorCode == 6)
@@ -95,6 +106,9 @@ namespace Collector.Api
 			{
 				return await ExecuteRequest(Method, Params);
 			}
+
+			if (isMethodNeedAuth(Method))
+				Thread.Sleep(300);
 
 			return result;
 		}

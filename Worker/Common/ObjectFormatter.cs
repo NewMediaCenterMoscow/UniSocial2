@@ -42,9 +42,9 @@ namespace Worker.Common
 				s.Write("\""); s.Write(obj.MobilePhone); s.Write("\",");
 
 				s.Write("\""); s.Write(obj.University); s.Write("\",");
-				s.Write("\""); s.Write(obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.University == 0 ? "" : obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");
 				s.Write("\""); s.Write(obj.Faculty); s.Write("\",");
-				s.Write("\""); s.Write(obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.Faculty == 0 ? "" : obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
 				s.Write("\""); s.Write(obj.Graduation); s.Write("\"\n");
 			});
 
@@ -98,7 +98,7 @@ namespace Worker.Common
 
 		}
 
-		public Stream ToCSV(object Object)
+		public Stream ToCSVStream(object Object)
 		{
 			var resultStream = new MemoryStream();
 			var writer = new StreamWriter(resultStream);

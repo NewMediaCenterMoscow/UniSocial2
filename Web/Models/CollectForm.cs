@@ -12,7 +12,7 @@ namespace Web.Models
 		public string Method { get; set; }
 
 		[Required]
-		public HttpPostedFileBase InputFile { get; set; }
+		public string InputFile { get; set; }
 
 		[Required]
 		public string Network { get; set; }

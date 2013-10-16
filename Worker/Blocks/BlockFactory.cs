@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Worker.Common;
 using Worker.Model;
+using Worker.Repository;
 
 namespace Worker.Blocks
 {
@@ -18,7 +19,14 @@ namespace Worker.Blocks
 		[Inject]
 		public TraceSource Trace { get; set; }
 
-		public BlockFactory()
+		CollectTask collectTask;
+
+		public BlockFactory(CollectTask CollectTask)
+		{
+			collectTask = CollectTask;
+		}
+
+		static BlockFactory()
 		{
 			createNinjectModules();
 		}
@@ -26,8 +34,8 @@ namespace Worker.Blocks
 
 		#region Ninject
 
-		Dictionary<string, IKernel> ninjectKernels;
-		void createNinjectModules()
+		static Dictionary<string, IKernel> ninjectKernels;
+		static void createNinjectModules()
 		{
 			ninjectKernels = new Dictionary<string, IKernel>();
 			ninjectKernels.Add(
@@ -39,7 +47,7 @@ namespace Worker.Blocks
 			);
 		}
 
-		IKernel getKernelFor(string socialNetwork)
+		static IKernel getKernelFor(string socialNetwork)
 		{
 			if (!ninjectKernels.ContainsKey(socialNetwork))
 				throw new NotImplementedException("Social network " + socialNetwork + " is not supported!");
@@ -51,23 +59,23 @@ namespace Worker.Blocks
 
 
 		#region Common blocks
-		public TransformManyBlock<Stream, string> StremToIds(CollectTask collectTask)
-		{
-			return 
-				new TransformManyBlock<Stream, string>(input => {
-					StreamReader reader = new StreamReader(input);
-					string result = reader.ReadToEnd();
+		//public TransformManyBlock<Stream, string> StremToIds()
+		//{
+		//	return 
+		//		new TransformManyBlock<Stream, string>(input => {
+		//			StreamReader reader = new StreamReader(input);
+		//			string result = reader.ReadToEnd();
 
-					input.Close();
+		//			input.Close();
 
-					var ret = result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+		//			var ret = result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-					collectTask.AllItems = ret.Length;
-					collectTask.CounterItems = 0;
+		//			collectTask.AllItems = ret.Length;
+		//			collectTask.CounterItems = 0;
 
-					return ret;
-				});
-		}
+		//			return ret;
+		//		});
+		//}
 
 		public TransformBlock<string, Stream> FileToStream()
 		{
@@ -93,31 +101,33 @@ namespace Worker.Blocks
 
 		#endregion
 
-		public BatchBlock<T> Batch<T>(CollectTask CollectTask)
+		public BufferBlock<string> Buffer()
 		{
-			var ninjectKernel = getKernelFor(CollectTask.SocialNetwork);
+			return new BufferBlock<string>();
+		}
+
+		public BatchBlock<T> Batch<T>()
+		{
+			var ninjectKernel = getKernelFor(collectTask.SocialNetwork);
 			var apiRequest = ninjectKernel.Get<IApiRequest>();
 
-			var bacthSize = apiRequest.GetRequestBatchSize(CollectTask.Method);
+			var bacthSize = apiRequest.GetRequestBatchSize(collectTask.Method);
 
 			return
 				new BatchBlock<T>(bacthSize);
 		}
 
-		public TransformBlock<string[], object> Process(CollectTask CollectTask)
+		public TransformBlock<string[], object> Process()
 		{
-			var ninjectKernel = getKernelFor(CollectTask.SocialNetwork);
+			var ninjectKernel = getKernelFor(collectTask.SocialNetwork);
 			var apiRequest = ninjectKernel.Get<IApiRequest>();
 
-			var method = CollectTask.Method;
+			var method = collectTask.Method;
 			return new TransformBlock<string[], object>(async ids =>
 			{
-				//counter += ids.Length;
-				//if(counter % 64 == 0)
-				//	Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + counter +"/" + all);
-				CollectTask.CounterItems += ids.Length;
-				if (CollectTask.CounterItems % 64 == 0)
-					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + CollectTask.CounterItems + "/" + CollectTask.AllItems);
+				collectTask.CounterItems += ids.Length;
+				if (collectTask.CounterItems % 64 == 0)
+					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
 
 				var requestType = apiRequest.GetRequestType(method);
 
@@ -135,7 +145,7 @@ namespace Worker.Blocks
 					}
 					if (requestType == ApiRequestType.ListForObject)
 					{
-						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(CollectTask.Method));
+						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(collectTask.Method));
 					}
 				}
 				catch (Exception ex)
@@ -144,23 +154,31 @@ namespace Worker.Blocks
 				}
 
 				return result;
-			//});
-			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
-		}
-
-		public TransformBlock<object, Stream> ToCSVStream()
-		{
-			return new TransformBlock<object, Stream>(o => {
-
-				if (o == null)
-					return null;
-
-				var objectFormatter = new ObjectFormatter();
-				var stream = objectFormatter.ToCSV(o);
-
-				return stream;
 			});
+			//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
 		}
 
+		public ActionBlock<object> WriteResults(IRepository Repo)
+		{
+			return 
+				new ActionBlock<object>(o =>
+				{
+					Repo.WriteResult(o);
+				});
+		}
+
+		//public TransformBlock<object, Stream> ToCSVStream()
+		//{
+		//	return new TransformBlock<object, Stream>(o => {
+
+		//		if (o == null)
+		//			return null;
+
+		//		var objectFormatter = new ObjectFormatter();
+		//		var stream = objectFormatter.ToCSVStream(o);
+
+		//		return stream;
+		//	});
+		//}
 	}
 }

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Web.Infrastructure;
 using Web.Models;
+using Worker.Model;
 
 namespace Web.Controllers
 {
@@ -14,6 +15,8 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
+			ViewBag.SourceFiles = service.GetPossibleSourceFiles();
+
             return View(new CollectForm());
         }
 
@@ -22,13 +25,23 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var ct = wkComm.CreateCollectTask(collectForm);
+				var inputFilename = service.GetSourceFilename(collectForm.InputFile);
+				var outpuFilename = service.GetResultFilename(collectForm.InputFile);
+
+				CollectTask ct = new CollectTask(collectForm.Network, collectForm.Method);
+				ct.Input = new CollectTaskIOFile(inputFilename);
+				ct.Output = new CollectTaskIOFile(outpuFilename);
+
 				wkComm.SendTaskToQueue(ct);
 
 				return RedirectToAction("CollectStarted");
 			}
 			else
+			{
+				ViewBag.SourceFiles = service.GetPossibleSourceFiles();
+
 				return View(collectForm);
+			}
 		}
 
 		

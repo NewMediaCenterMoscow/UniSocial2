@@ -2,6 +2,8 @@
 
 @{
 	ViewBag.Title = "Collect";
+
+	var sourceFiles = ViewBag.SourceFiles as List<string>;
 }
 
 <div class="container main-content">
@@ -18,98 +20,58 @@
 			<div id="collapseOne" class="panel-collapse collapse in">
 				<div class="panel-body">
 
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#vk-users" data-toggle="tab">Users</a></li>
-						<li><a href="#vk-wall" data-toggle="tab">Wall</a></li>
-						<li><a href="#vk-groups" data-toggle="tab">Groups</a></li>
-					</ul>
-					<div id="myTabContent" class="tab-content">
-						<div class="tab-pane fade in active" id="vk-users">
-
-							@using (@Html.BeginForm("Index", "CollectTask", FormMethod.Post, new { enctype = "multipart/form-data" }))
-							{
-								@Html.ValidationSummary()
-
-								<div class="form-group">
-									<label>Select need data</label> <br />
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary">
-											@Html.RadioButtonFor(m => m.Method, "users.get") Information
-										</label>
-										<label class="btn btn-primary">
-											@Html.RadioButtonFor(m => m.Method, "users.getSubscriptions") Subscriptions
-										</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="inputFile">Select input file</label>
-									<input type="file" name="inputFile" id="inputFile">
-									<p class="help-block">File contains user ids separated by new line</p>
-								</div>
-
-								@Html.Hidden("network", "vkontakte")
-
-								<button type="submit" class="btn btn-default">Start collect</button>
-							}
+					@*<div class="form-group">
+							<label for="inputFile">Select input file</label>
+							<input type="file" name="inputFile" id="inputFile">
+							<p class="help-block">File contains user or group ids separated by new line</p>
+						</div>*@
 
 
+
+					@using (@Html.BeginForm())
+					{
+						@Html.ValidationSummary()
+
+						<div class="form-group">
+							<label>Select need data</label> <br />
+							<div class="btn-group" data-toggle="buttons">
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "users.get") User info
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "groups.getById") Group info
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "wall.get") Wall posts
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "users.getSubscriptions") User subscriptions
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "wall.getReposts") Reposts
+								</label>
+							</div>
 						</div>
-						<div class="tab-pane fade" id="vk-wall">
+						<div class="form-group">
+							<label for="inputFile">Select input file</label>
+							<p class="help-block">File contains user or group ids separated by new line</p>
 
-							@using (@Html.BeginForm("Index", "CollectTask", FormMethod.Post, new { enctype = "multipart/form-data" }))
+							@foreach (var filename in sourceFiles)
 							{
-								@Html.ValidationSummary()
-
-								<div class="form-group">
-									<label>Select need data</label> <br />
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary">
-											@Html.RadioButtonFor(m => m.Method, "wall.get") Post
-										</label>
-										<label class="btn btn-primary">
-											@Html.RadioButtonFor(m => m.Method, "wall.getReposts") Reposts
-										</label>
-									</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="inputFile" id="inputFile" value="@filename">
+										@filename
+									</label>
 								</div>
-								<div class="form-group">
-									<label for="inputFile">Select input file</label>
-									<input type="file" name="inputFile" id="inputFile">
-									<p class="help-block">File contains user or group ids separated by new line</p>
-								</div>
-
-								@Html.Hidden("network", "vkontakte")
-
-								<button type="submit" class="btn btn-default">Start collect</button>
 							}
 
 						</div>
-						<div class="tab-pane fade" id="vk-groups">
 
-							@using (@Html.BeginForm("Index", "CollectTask", FormMethod.Post, new { enctype = "multipart/form-data" }))
-							{
-								@Html.ValidationSummary()
 
-								<div class="form-group">
-									<label>Select need data</label> <br />
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary">
-											@Html.RadioButtonFor(m => m.Method, "groups.getById") Information
-										</label>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="inputFile">Select input file</label>
-									<input type="file" name="inputFile" id="inputFile">
-									<p class="help-block">File contains group ids separated by new line</p>
-								</div>
-
-								@Html.Hidden("network", "vkontakte")
-
-								<button type="submit" class="btn btn-default">Start collect</button>
-							}
-						</div>
-					</div>
+						@Html.Hidden("network", "vkontakte")
+						<button type="submit" class="btn btn-default">Start collect</button>
+					}
 
 				</div>
 			</div>
