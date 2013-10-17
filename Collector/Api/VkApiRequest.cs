@@ -20,7 +20,7 @@ namespace Collector.Api
 			objectTypeForMethods.Add("wall.getReposts", typeof(VkPost));
 
 			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
-			requestTypes.Add("users.getSubscriptions", ApiRequestType.ListForObject);
+			requestTypes.Add("users.getSubscriptions", ApiRequestType.ObjectInfo);
 			requestTypes.Add("users.get", ApiRequestType.ListObjectsInfo);
 			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
 			requestTypes.Add("wall.getReposts", ApiRequestType.ListForObject);
@@ -101,6 +101,16 @@ namespace Collector.Api
 				default:
 					throw new NotSupportedException("Method `" + requestParam.Method + "` is not supported!");
 			}
+		}
+
+		protected override void setAdditionalObjectFields(object Data, ApiRequestParam requestParam)
+		{
+			if (Data is VkUserSubscriptions)
+			{
+				var data = Data as VkUserSubscriptions;
+
+				data.Id = Int32.Parse(requestParam.Params["user_id"]);
+			}			
 		}
 	}
 }

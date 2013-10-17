@@ -17,84 +17,10 @@ namespace Worker.Common
 		{
 			formatters = new Dictionary<Type,Action<object, StreamWriter>>();
 
-			formatters.Add(typeof(VkUser), (o, s) =>
-			{
-				var obj = o as VkUser;
-
-				s.Write("\""); s.Write(obj.Id); s.Write("\",");
-				s.Write("\""); s.Write(obj.FirstName.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.LastName.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
-				s.Write("\""); s.Write(obj.Nickname != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
-				
-				s.Write("\""); s.Write((int)obj.Sex); s.Write("\",");
-				s.Write("\""); s.Write(obj.BDate); s.Write("\",");
-				s.Write("\""); s.Write(obj.City); s.Write("\",");
-				s.Write("\""); s.Write(obj.Country); s.Write("\",");
-				s.Write("\""); s.Write(obj.Timezone); s.Write("\",");
-
-				s.Write("\""); s.Write(obj.Photo50); s.Write("\",");
-				s.Write("\""); s.Write(obj.Photo100); s.Write("\",");
-				s.Write("\""); s.Write(obj.PhotoMaxOrig); s.Write("\",");
-
-				s.Write("\""); s.Write(obj.HasMobile); s.Write("\",");
-				s.Write("\""); s.Write(obj.HomePhone); s.Write("\",");
-				s.Write("\""); s.Write(obj.MobilePhone); s.Write("\",");
-
-				s.Write("\""); s.Write(obj.University); s.Write("\",");
-				s.Write("\""); s.Write(obj.University == 0 ? "" : obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.Faculty); s.Write("\",");
-				s.Write("\""); s.Write(obj.Faculty == 0 ? "" : obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.Graduation); s.Write("\"\n");
-			});
-
-			formatters.Add(typeof(VkGroup), (o, s) =>
-			{
-				var obj = o as VkGroup;
-
-				s.Write("\""); s.Write(obj.Id);							s.Write("\",");
-				s.Write("\""); s.Write(obj.Name.Replace("\"", "\"\""));	s.Write("\",");
-				s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
-				s.Write("\""); s.Write(obj.IsClosed);					s.Write("\",");
-				s.Write("\""); s.Write((int)obj.Type);					s.Write("\",");
-				s.Write("\""); s.Write(obj.MembersCount);				s.Write("\"\n");
-
-			});
-
-			formatters.Add(typeof(VkPost), (o, s) =>
-			{
-				var obj = o as VkPost;
-
-				s.Write("\""); s.Write(obj.Id); s.Write("\",");
-				s.Write("\""); s.Write(obj.ToId); s.Write("\",");
-				s.Write("\""); s.Write(obj.FromId); s.Write("\",");
-				s.Write("\""); s.Write(obj.Date); s.Write("\",");
-
-				if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
-				{
-					var copyPost = obj.CopyHistory.First();
-
-					s.Write("\""); s.Write(copyPost.Text.Replace("\"", "\"\"")); s.Write("\","); // Text - from copy post
-					s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
-
-					s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
-					s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
-					s.Write("\""); s.Write(copyPost.Id); s.Write("\",");
-					s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\"");
-				}
-				else
-				{
-					s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-					s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
-
-					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_dae
-					s.Write("\""); s.Write(0); s.Write("\","); // copy_owner_id
-					s.Write("\""); s.Write(0); s.Write("\","); // copy_post_id
-					s.Write("\""); s.Write(""); s.Write("\""); // copy_text
-				}
-				
-				s.Write("\n");
-			});
+			formatters.Add(typeof(VkUser), formatVkUser);
+			formatters.Add(typeof(VkGroup), formatVkGroup);
+			formatters.Add(typeof(VkPost), formatVkPost);
+			formatters.Add(typeof(VkUserSubscriptions), formatVkUserSubscriptions);
 
 		}
 
@@ -103,7 +29,7 @@ namespace Worker.Common
 			var resultStream = new MemoryStream();
 			var writer = new StreamWriter(resultStream);
 
-			if(Object is List<object>)
+			if (Object is List<object>)
 			{
 				var listObjs = Object as List<object>;
 
@@ -123,10 +49,99 @@ namespace Worker.Common
 				formatters[t](Object, writer);
 			}
 
-			//resultStream.Seek(0, SeekOrigin.Begin);
 			writer.Flush();
 
 			return resultStream;
+		}
+
+
+
+		private static void formatVkPost(object o, StreamWriter s)
+		{
+			var obj = o as VkPost;
+
+			s.Write("\""); s.Write(obj.Id); s.Write("\",");
+			s.Write("\""); s.Write(obj.ToId); s.Write("\",");
+			s.Write("\""); s.Write(obj.FromId); s.Write("\",");
+			s.Write("\""); s.Write(obj.Date); s.Write("\",");
+
+			if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
+			{
+				var copyPost = obj.CopyHistory.First();
+
+				s.Write("\""); s.Write(copyPost.Text.Replace("\"", "\"\"")); s.Write("\","); // Text - from copy post
+				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+
+				s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
+				s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
+				s.Write("\""); s.Write(copyPost.Id); s.Write("\",");
+				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\"");
+			}
+			else
+			{
+				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+
+				s.Write("\""); s.Write(0); s.Write("\","); // copy_post_dae
+				s.Write("\""); s.Write(0); s.Write("\","); // copy_owner_id
+				s.Write("\""); s.Write(0); s.Write("\","); // copy_post_id
+				s.Write("\""); s.Write(""); s.Write("\""); // copy_text
+			}
+
+			s.Write("\n");
+		}
+
+		private static void formatVkGroup(object o, StreamWriter s)
+		{
+			var obj = o as VkGroup;
+
+			s.Write("\""); s.Write(obj.Id); s.Write("\",");
+			s.Write("\""); s.Write(obj.Name.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+			s.Write("\""); s.Write(obj.IsClosed); s.Write("\",");
+			s.Write("\""); s.Write((int)obj.Type); s.Write("\",");
+			s.Write("\""); s.Write(obj.MembersCount); s.Write("\"\n");
+		}
+
+		private static void formatVkUser(object o, StreamWriter s)
+		{
+			var obj = o as VkUser;
+
+			s.Write("\""); s.Write(obj.Id); s.Write("\",");
+			s.Write("\""); s.Write(obj.FirstName.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.LastName.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.ScreenName != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+			s.Write("\""); s.Write(obj.Nickname != null ? obj.ScreenName.Replace("\"", "\"\"") : ""); s.Write("\",");
+
+			s.Write("\""); s.Write((int)obj.Sex); s.Write("\",");
+			s.Write("\""); s.Write(obj.BDate); s.Write("\",");
+			s.Write("\""); s.Write(obj.City); s.Write("\",");
+			s.Write("\""); s.Write(obj.Country); s.Write("\",");
+			s.Write("\""); s.Write(obj.Timezone); s.Write("\",");
+
+			s.Write("\""); s.Write(obj.Photo50); s.Write("\",");
+			s.Write("\""); s.Write(obj.Photo100); s.Write("\",");
+			s.Write("\""); s.Write(obj.PhotoMaxOrig); s.Write("\",");
+
+			s.Write("\""); s.Write(obj.HasMobile); s.Write("\",");
+			s.Write("\""); s.Write(obj.HomePhone); s.Write("\",");
+			s.Write("\""); s.Write(obj.MobilePhone); s.Write("\",");
+
+			s.Write("\""); s.Write(obj.University); s.Write("\",");
+			s.Write("\""); s.Write(obj.University == 0 ? "" : obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.Faculty); s.Write("\",");
+			s.Write("\""); s.Write(obj.Faculty == 0 ? "" : obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.Graduation); s.Write("\"\n");
+		}
+
+		private static void formatVkUserSubscriptions(object o, StreamWriter s)
+		{
+			var obj = o as VkUserSubscriptions;
+
+			foreach (var grp in obj.Groups.Items)
+			{
+				s.Write(grp); s.Write(","); s.Write(obj.Id); s.Write("\n");
+			}
 		}
 
 	}

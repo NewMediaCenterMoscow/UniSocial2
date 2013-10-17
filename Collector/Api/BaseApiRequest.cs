@@ -117,6 +117,7 @@ namespace Collector.Api
 		protected abstract void setIdParams(ApiRequestParam requestParam, string id);
 		protected abstract void setIdParams(ApiRequestParam requestParam, List<string> ids);
 
+		protected abstract void setAdditionalObjectFields(object Data, ApiRequestParam requestParam);
 
 		protected ApiRequestParam createRequestParam(string Method)
 		{
@@ -141,6 +142,8 @@ namespace Collector.Api
 			{
 				result = dataExtractor.GetItems(rawData, needObjectType);
 			}
+
+			setAdditionalObjectFields(result, param);
 
 			return result;
 		}
