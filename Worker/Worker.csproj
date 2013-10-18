@@ -89,6 +89,7 @@
     <Compile Include="Blocks\BlockFactory.cs" />
     <Compile Include="Common\DataCollector.cs" />
     <Compile Include="Common\ObjectFormatter.cs" />
+    <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Repository\FileRepository.cs" />
     <Compile Include="Model\CollectTaskIODatabase.cs" />
     <Compile Include="NinjectModules\Vk.cs" />

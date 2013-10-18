@@ -39,17 +39,24 @@
 									@Html.RadioButtonFor(m => m.Method, "users.get") User info
 								</label>
 								<label class="btn btn-primary">
-									@Html.RadioButtonFor(m => m.Method, "groups.getById") Group info
-								</label>
-								<label class="btn btn-primary">
-									@Html.RadioButtonFor(m => m.Method, "wall.get") Wall posts
+									@Html.RadioButtonFor(m => m.Method, "friends.get") User friends
 								</label>
 								<label class="btn btn-primary">
 									@Html.RadioButtonFor(m => m.Method, "users.getSubscriptions") User subscriptions
 								</label>
 								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "groups.getById") Group info
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "groups.getMembers") Group members
+								</label>
+								<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "wall.get") Wall posts
+								</label>
+								<label class="btn btn-primary">
 									@Html.RadioButtonFor(m => m.Method, "wall.getReposts") Reposts
 								</label>
+
 							</div>
 						</div>
 						<div class="form-group">

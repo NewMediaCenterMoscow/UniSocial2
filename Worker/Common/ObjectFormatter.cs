@@ -21,6 +21,8 @@ namespace Worker.Common
 			formatters.Add(typeof(VkGroup), formatVkGroup);
 			formatters.Add(typeof(VkPost), formatVkPost);
 			formatters.Add(typeof(VkUserSubscriptions), formatVkUserSubscriptions);
+			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
+			formatters.Add(typeof(VkFriends), formatVkFriends);
 
 		}
 
@@ -53,8 +55,6 @@ namespace Worker.Common
 
 			return resultStream;
 		}
-
-
 
 		private static void formatVkPost(object o, StreamWriter s)
 		{
@@ -90,7 +90,6 @@ namespace Worker.Common
 
 			s.Write("\n");
 		}
-
 		private static void formatVkGroup(object o, StreamWriter s)
 		{
 			var obj = o as VkGroup;
@@ -102,7 +101,6 @@ namespace Worker.Common
 			s.Write("\""); s.Write((int)obj.Type); s.Write("\",");
 			s.Write("\""); s.Write(obj.MembersCount); s.Write("\"\n");
 		}
-
 		private static void formatVkUser(object o, StreamWriter s)
 		{
 			var obj = o as VkUser;
@@ -133,7 +131,6 @@ namespace Worker.Common
 			s.Write("\""); s.Write(obj.Faculty == 0 ? "" : obj.FacultyName.Replace("\"", "\"\"")); s.Write("\",");
 			s.Write("\""); s.Write(obj.Graduation); s.Write("\"\n");
 		}
-
 		private static void formatVkUserSubscriptions(object o, StreamWriter s)
 		{
 			var obj = o as VkUserSubscriptions;
@@ -141,6 +138,24 @@ namespace Worker.Common
 			foreach (var grp in obj.Groups.Items)
 			{
 				s.Write(grp); s.Write(","); s.Write(obj.Id); s.Write("\n");
+			}
+		}
+		private void formatVkGroupMembers(object o, StreamWriter s)
+		{
+			var obj = o as VkGroupMembers;
+
+			foreach (var memberId in obj.GroupMembers)
+			{
+				s.Write(obj.GroupId); s.Write(","); s.Write(memberId); s.Write("\n");
+			}
+		}
+		private void formatVkFriends(object o, StreamWriter s)
+		{
+			var obj = o as VkFriends;
+
+			foreach (var friendId in obj.Friends)
+			{
+				s.Write(obj.UserId); s.Write(","); s.Write(friendId); s.Write("\n");
 			}
 		}
 

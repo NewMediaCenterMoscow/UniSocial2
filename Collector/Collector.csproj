@@ -67,7 +67,9 @@
     <Compile Include="Interface\IApi.cs" />
     <Compile Include="Interface\IApiRequest.cs" />
     <Compile Include="Interface\IDataExtractor.cs" />
+    <Compile Include="Model\VkFriends.cs" />
     <Compile Include="Model\VkGroup.cs" />
+    <Compile Include="Model\VkGroupMembers.cs" />
     <Compile Include="Model\VkList.cs" />
     <Compile Include="Model\VkNestedCount.cs" />
     <Compile Include="Model\VkPost.cs" />

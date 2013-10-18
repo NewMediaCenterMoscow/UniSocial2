@@ -12,6 +12,8 @@ namespace Collector.Api
 {
 	public class VkDataExtractor : IDataExtractor
 	{
+		static List<string> possibleListIndexes = new List<string>() { "items", "users" };
+
 		public int GetListCount(JObject Data)
 		{
 			return (int)Data["response"]["count"];
@@ -31,9 +33,17 @@ namespace Collector.Api
 			}
 			else
 			{
-				var tmp = data["items"];
-				var res = tmp.ToObject(listType);
-				return ((IEnumerable)res).Cast<object>().ToList();
+				foreach (var idx in possibleListIndexes)
+				{
+					if (data[idx] != null)
+					{
+						var tmp = data[idx];
+						var res = tmp.ToObject(listType);
+						return ((IEnumerable)res).Cast<object>().ToList();
+					}
+				}
+
+				return null;
 			}
 		}
 

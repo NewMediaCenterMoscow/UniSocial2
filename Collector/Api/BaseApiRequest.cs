@@ -117,7 +117,7 @@ namespace Collector.Api
 		protected abstract void setIdParams(ApiRequestParam requestParam, string id);
 		protected abstract void setIdParams(ApiRequestParam requestParam, List<string> ids);
 
-		protected abstract void setAdditionalObjectFields(object Data, ApiRequestParam requestParam);
+		protected abstract object modifyResult(object Data, ApiRequestParam requestParam);
 
 		protected ApiRequestParam createRequestParam(string Method)
 		{
@@ -143,8 +143,6 @@ namespace Collector.Api
 				result = dataExtractor.GetItems(rawData, needObjectType);
 			}
 
-			setAdditionalObjectFields(result, param);
-
 			return result;
 		}
 
@@ -155,7 +153,7 @@ namespace Collector.Api
 			setIdParams(param, Id);
 
 			var result = await executeRequest(param);
-			return result;
+			return modifyResult(result, param);
 		}
 		public async Task<object> ExecuteRequest(string Method, List<string> Ids)
 		{
@@ -164,7 +162,7 @@ namespace Collector.Api
 			setIdParams(param, Ids);
 
 			var result = await executeRequest(param);
-			return result;
+			return modifyResult(result, param);
 		}
 		public async Task<object> ExecuteRequest(string Method, string Id, int Offset, int Count)
 		{
@@ -201,7 +199,7 @@ namespace Collector.Api
 				}
 			}
 
-			return resultList;
+			return modifyResult(resultList, param);
 		}
 	}
 }

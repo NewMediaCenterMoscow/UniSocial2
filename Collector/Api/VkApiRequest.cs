@@ -1,6 +1,7 @@
 ﻿using Collector.Interface;
 using Collector.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,16 +15,20 @@ namespace Collector.Api
 			: base(Api, DataExtractor)
 		{
 			objectTypeForMethods.Add("groups.getById", typeof(VkGroup));
+			objectTypeForMethods.Add("groups.getMembers", typeof(long));
 			objectTypeForMethods.Add("users.getSubscriptions", typeof(VkUserSubscriptions));
 			objectTypeForMethods.Add("users.get", typeof(VkUser));
 			objectTypeForMethods.Add("wall.get", typeof(VkPost));
 			objectTypeForMethods.Add("wall.getReposts", typeof(VkPost));
+			objectTypeForMethods.Add("friends.get", typeof(long));
 
 			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
+			requestTypes.Add("groups.getMembers", ApiRequestType.ListForObject);
 			requestTypes.Add("users.getSubscriptions", ApiRequestType.ObjectInfo);
 			requestTypes.Add("users.get", ApiRequestType.ListObjectsInfo);
 			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
 			requestTypes.Add("wall.getReposts", ApiRequestType.ListForObject);
+			requestTypes.Add("friends.get", ApiRequestType.ListForObject);
 
 			requestParams.Add("groups.getById",
 				new ApiRequestParam(new Dictionary<string, string>() {
@@ -41,9 +46,11 @@ namespace Collector.Api
 				})
 			);
 
+			itemsMaxCounts.Add("groups.getMembers", 10);
 			itemsMaxCounts.Add("wall.get", 100);
 			itemsMaxCounts.Add("wall.getReposts", 1000);
 			itemsMaxCounts.Add("users.getSubscriptions", 200);
+			itemsMaxCounts.Add("friends.get", Int32.MaxValue);
 
 			batchSizes.Add("users.get", 300);
 			batchSizes.Add("groups.getById", 300);
@@ -65,6 +72,9 @@ namespace Collector.Api
 				case "groups.getById":
 					requestParam.Params["group_id"] = id;
 					break;
+				case "groups.getMembers":
+					requestParam.Params["group_id"] = id;
+					break;
 				case "users.getSubscriptions":
 					requestParam.Params["user_id"] = id;
 					break;
@@ -83,6 +93,10 @@ namespace Collector.Api
 					requestParam.Params["owner_id"] = ids[0];
 					requestParam.Params["post_id"] = ids[1];
 					break;
+				case "friends.get":
+					requestParam.Params["user_id"] = id;
+					break;
+
 				default:
 					throw new NotSupportedException("Method `" + requestParam.Method + "` is not supported!");
 			}
@@ -103,14 +117,37 @@ namespace Collector.Api
 			}
 		}
 
-		protected override void setAdditionalObjectFields(object Data, ApiRequestParam requestParam)
+		protected override object modifyResult(object Data, ApiRequestParam requestParam)
 		{
-			if (Data is VkUserSubscriptions)
+			if (requestParam.Method == "users.getSubscriptions")
 			{
 				var data = Data as VkUserSubscriptions;
 
 				data.Id = Int32.Parse(requestParam.Params["user_id"]);
-			}			
+
+				return data;
+			}
+
+			if (requestParam.Method == "groups.getMembers")
+			{
+				var res = new VkGroupMembers();
+
+				res.GroupId = Int32.Parse(requestParam.Params["group_id"]);
+				res.GroupMembers = Data as List<long>;
+
+				return res;
+			}
+			if (requestParam.Method == "friends.get")
+			{
+				var res = new VkFriends();
+
+				res.UserId = Int32.Parse(requestParam.Params["user_id"]);
+				res.Friends = ((IEnumerable)Data).Cast<long>().ToList();
+
+				return res;
+			}
+			
+			return Data;
 		}
 	}
 }
