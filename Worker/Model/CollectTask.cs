@@ -35,7 +35,6 @@ namespace Worker.Model
 		public string ErrorMessage { get; set; }
 		#endregion
 
-
 		[DataMember]
 		public CollectTaskIO Input { get; set; }
 		[DataMember]

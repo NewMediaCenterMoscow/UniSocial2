@@ -26,8 +26,6 @@
 							<p class="help-block">File contains user or group ids separated by new line</p>
 						</div>*@
 
-
-
 					@using (@Html.BeginForm())
 					{
 						@Html.ValidationSummary()
@@ -44,6 +42,9 @@
 								<label class="btn btn-primary">
 									@Html.RadioButtonFor(m => m.Method, "users.getSubscriptions") User subscriptions
 								</label>
+								@*<label class="btn btn-primary">
+									@Html.RadioButtonFor(m => m.Method, "groups.get") User moder groups
+								</label>*@
 								<label class="btn btn-primary">
 									@Html.RadioButtonFor(m => m.Method, "groups.getById") Group info
 								</label>
@@ -75,7 +76,12 @@
 
 						</div>
 
-
+						<div class="form-group">
+							<label for="outputFilename">Output filename</label>
+							<input type="text" class="form-control" name="outputFilename" placeholder="Enter output filename">
+						</div>
+						
+						
 						@Html.Hidden("network", "vkontakte")
 						<button type="submit" class="btn btn-default">Start collect</button>
 					}

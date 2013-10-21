@@ -23,7 +23,8 @@ namespace Worker.Common
 			formatters.Add(typeof(VkUserSubscriptions), formatVkUserSubscriptions);
 			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
 			formatters.Add(typeof(VkFriends), formatVkFriends);
-
+			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
+			
 		}
 
 		public Stream ToCSVStream(object Object)
@@ -158,6 +159,14 @@ namespace Worker.Common
 				s.Write(obj.UserId); s.Write(","); s.Write(friendId); s.Write("\n");
 			}
 		}
+		private void formatVkUserGroups(object o, StreamWriter s)
+		{
+			var obj = o as VkUserGroups;
 
+			foreach (var groupId in obj.Groups)
+			{
+				s.Write(obj.UserId); s.Write(","); s.Write(groupId); s.Write("\n");
+			}
+		}
 	}
 }

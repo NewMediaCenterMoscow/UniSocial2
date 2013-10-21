@@ -129,6 +129,15 @@ namespace Worker.Blocks
 				if (collectTask.CounterItems % 64 == 0)
 					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
 
+				if (collectTask.CounterItems % 10000 == 0)
+				{
+					System.Threading.Thread.Sleep(TimeSpan.FromSeconds(180));
+				}
+				else if (collectTask.CounterItems % 1000 == 0)
+				{
+					System.Threading.Thread.Sleep(TimeSpan.FromSeconds(60));
+				}
+
 				var requestType = apiRequest.GetRequestType(method);
 
 				object result = null;

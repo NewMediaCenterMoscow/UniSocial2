@@ -16,6 +16,7 @@ namespace Collector.Api
 		{
 			objectTypeForMethods.Add("groups.getById", typeof(VkGroup));
 			objectTypeForMethods.Add("groups.getMembers", typeof(long));
+			objectTypeForMethods.Add("groups.get", typeof(long));
 			objectTypeForMethods.Add("users.getSubscriptions", typeof(VkUserSubscriptions));
 			objectTypeForMethods.Add("users.get", typeof(VkUser));
 			objectTypeForMethods.Add("wall.get", typeof(VkPost));
@@ -24,6 +25,7 @@ namespace Collector.Api
 
 			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
 			requestTypes.Add("groups.getMembers", ApiRequestType.ListForObject);
+			requestTypes.Add("groups.get", ApiRequestType.ListForObject);
 			requestTypes.Add("users.getSubscriptions", ApiRequestType.ObjectInfo);
 			requestTypes.Add("users.get", ApiRequestType.ListObjectsInfo);
 			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
@@ -35,6 +37,11 @@ namespace Collector.Api
 					{ "fields", "members_count" } 
 				})
 			);
+			//requestParams.Add("groups.get",
+			//	new ApiRequestParam(new Dictionary<string, string>() {
+			//		{ "filter", "moder" } 
+			//	})
+			//);
 			requestParams.Add("users.get",
 				new ApiRequestParam(new Dictionary<string, string>() {
 					{ "fields", "education,contacts,nickname, screen_name, sex, bdate, city, country, timezone, photo_50, photo_100, photo_200, photo_max, has_mobile, online" } 
@@ -47,6 +54,7 @@ namespace Collector.Api
 			);
 
 			itemsMaxCounts.Add("groups.getMembers", 10);
+			itemsMaxCounts.Add("groups.get", 1000);
 			itemsMaxCounts.Add("wall.get", 100);
 			itemsMaxCounts.Add("wall.getReposts", 1000);
 			itemsMaxCounts.Add("users.getSubscriptions", 200);
@@ -71,6 +79,9 @@ namespace Collector.Api
 			{
 				case "groups.getById":
 					requestParam.Params["group_id"] = id;
+					break;
+				case "groups.get":
+					requestParam.Params["user_id"] = id;
 					break;
 				case "groups.getMembers":
 					requestParam.Params["group_id"] = id;
@@ -133,7 +144,7 @@ namespace Collector.Api
 				var res = new VkGroupMembers();
 
 				res.GroupId = Int32.Parse(requestParam.Params["group_id"]);
-				res.GroupMembers = Data as List<long>;
+				res.GroupMembers = ((IEnumerable)Data).Cast<long>().ToList();
 
 				return res;
 			}
@@ -143,6 +154,15 @@ namespace Collector.Api
 
 				res.UserId = Int32.Parse(requestParam.Params["user_id"]);
 				res.Friends = ((IEnumerable)Data).Cast<long>().ToList();
+
+				return res;
+			}
+			if (requestParam.Method == "groups.get")
+			{
+				var res = new VkUserGroups();
+
+				res.UserId = Int32.Parse(requestParam.Params["user_id"]);
+				res.Groups = ((IEnumerable)Data).Cast<long>().ToList();
 
 				return res;
 			}

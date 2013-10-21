@@ -74,6 +74,7 @@
     <Compile Include="Model\VkNestedCount.cs" />
     <Compile Include="Model\VkPost.cs" />
     <Compile Include="Model\VkUser.cs" />
+    <Compile Include="Model\VkUserGroups.cs" />
     <Compile Include="Model\VkUserSubscriptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

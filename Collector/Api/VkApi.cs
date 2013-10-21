@@ -29,7 +29,8 @@ namespace Collector.Api
 		string authToken;
 
 		List<string> methodNeedAuth = new List<string>() {
-			"getReposts"
+			"getReposts",
+			"groups.get"
 		};
 
 		public VkApi()

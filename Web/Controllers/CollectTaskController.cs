@@ -26,7 +26,7 @@ namespace Web.Controllers
 			if (ModelState.IsValid)
 			{
 				var inputFilename = service.GetSourceFilename(collectForm.InputFile);
-				var outpuFilename = service.GetResultFilename(collectForm.InputFile);
+				var outpuFilename = service.GetResultFilename(collectForm.OutputFilename);
 
 				CollectTask ct = new CollectTask(collectForm.Network, collectForm.Method);
 				ct.Input = new CollectTaskIOFile(inputFilename);

@@ -15,6 +15,9 @@ namespace Web.Models
 		public string InputFile { get; set; }
 
 		[Required]
+		public string OutputFilename { get; set; }
+
+		[Required]
 		public string Network { get; set; }
 
 	}
