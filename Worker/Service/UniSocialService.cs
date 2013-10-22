@@ -46,19 +46,27 @@ namespace Worker.Service
 					}
 
 					CollectTask.IsCompleted = true;
-					tasks.Remove(CollectTask);
+					//tasks.Remove(CollectTask);
 					Trace.TraceEvent(TraceEventType.Stop, CollectTask.GetHashCode(), CollectTask.ToString());
 				}
 			);
 
 		}
 
-		public List<CollectTask> GetCurrentTasks()
+		public List<CollectTask> GetTasks()
 		{
 			return tasks;
 		}
 
+		public void RemoveTaskFromList(CollectTask CollectTask)
+		{
+			tasks.Remove(CollectTask);
+		}
+
+	
 		#endregion
+
+
 
 
 	}

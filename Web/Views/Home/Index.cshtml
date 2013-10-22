@@ -2,6 +2,9 @@
 
 @{
 	ViewBag.Title = "Home Page";
+
+	var completedTask = Model.Where(t => t.IsCompleted == true);
+	var inProcessTask = Model.Where(t => t.IsCompleted != true);
 }
 
 <div class="jumbotron">
@@ -11,10 +14,10 @@
 		{
 			<h1>Current collect tasks</h1>
 			<ul>
-				@foreach (var item in Model)
+				@foreach (var item in inProcessTask)
 				{
-					var output = (item.Output as CollectTaskIOFile).Filename;
-					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)% - output: @output</li>
+					var output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)% - @output</li>
 				}
 			</ul>
 		}
@@ -32,6 +35,13 @@
 
 <div class="container">
 
-	test
+	<h1>Completed task</h1>
 
+	<ul>
+		@foreach (var item in completedTask)
+		{
+			var output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+			<li>@item.SocialNetwork: @item.Method - @output</li>
+		}
+	</ul>
 </div>

@@ -22,11 +22,18 @@ namespace Web.UniSocialService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/StartNewTask", ReplyAction="http://tempuri.org/IUniSocial/StartNewTaskResponse")]
         System.Threading.Tasks.Task StartNewTaskAsync(Worker.Model.CollectTask CollectTask);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTasks", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTasksResponse")]
-        System.Collections.Generic.List<Worker.Model.CollectTask> GetCurrentTasks();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetTasks", ReplyAction="http://tempuri.org/IUniSocial/GetTasksResponse")]
+        System.Collections.Generic.List<Worker.Model.CollectTask> GetTasks();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetCurrentTasks", ReplyAction="http://tempuri.org/IUniSocial/GetCurrentTasksResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetCurrentTasksAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/GetTasks", ReplyAction="http://tempuri.org/IUniSocial/GetTasksResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetTasksAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/RemoveTaskFromList", ReplyAction="http://tempuri.org/IUniSocial/RemoveTaskFromListResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Worker.Model.CollectTaskIOFile))]
+        void RemoveTaskFromList(Worker.Model.CollectTask CollectTask);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUniSocial/RemoveTaskFromList", ReplyAction="http://tempuri.org/IUniSocial/RemoveTaskFromListResponse")]
+        System.Threading.Tasks.Task RemoveTaskFromListAsync(Worker.Model.CollectTask CollectTask);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -64,12 +71,20 @@ namespace Web.UniSocialService {
             return base.Channel.StartNewTaskAsync(CollectTask);
         }
         
-        public System.Collections.Generic.List<Worker.Model.CollectTask> GetCurrentTasks() {
-            return base.Channel.GetCurrentTasks();
+        public System.Collections.Generic.List<Worker.Model.CollectTask> GetTasks() {
+            return base.Channel.GetTasks();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetCurrentTasksAsync() {
-            return base.Channel.GetCurrentTasksAsync();
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<Worker.Model.CollectTask>> GetTasksAsync() {
+            return base.Channel.GetTasksAsync();
+        }
+        
+        public void RemoveTaskFromList(Worker.Model.CollectTask CollectTask) {
+            base.Channel.RemoveTaskFromList(CollectTask);
+        }
+        
+        public System.Threading.Tasks.Task RemoveTaskFromListAsync(Worker.Model.CollectTask CollectTask) {
+            return base.Channel.RemoveTaskFromListAsync(CollectTask);
         }
     }
 }

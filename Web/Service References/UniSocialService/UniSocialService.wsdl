@@ -13,20 +13,30 @@
   <wsdl:message name="IUniSocial_StartNewTask_OutputMessage">
     <wsdl:part name="parameters" element="tns:StartNewTaskResponse" />
   </wsdl:message>
-  <wsdl:message name="IUniSocial_GetCurrentTasks_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentTasks" />
+  <wsdl:message name="IUniSocial_GetTasks_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTasks" />
   </wsdl:message>
-  <wsdl:message name="IUniSocial_GetCurrentTasks_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentTasksResponse" />
+  <wsdl:message name="IUniSocial_GetTasks_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTasksResponse" />
+  </wsdl:message>
+  <wsdl:message name="IUniSocial_RemoveTaskFromList_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveTaskFromList" />
+  </wsdl:message>
+  <wsdl:message name="IUniSocial_RemoveTaskFromList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveTaskFromListResponse" />
   </wsdl:message>
   <wsdl:portType name="IUniSocial">
     <wsdl:operation name="StartNewTask">
       <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/StartNewTask" message="tns:IUniSocial_StartNewTask_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/StartNewTaskResponse" message="tns:IUniSocial_StartNewTask_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetCurrentTasks">
-      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTasks" message="tns:IUniSocial_GetCurrentTasks_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/GetCurrentTasksResponse" message="tns:IUniSocial_GetCurrentTasks_OutputMessage" />
+    <wsdl:operation name="GetTasks">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/GetTasks" message="tns:IUniSocial_GetTasks_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/GetTasksResponse" message="tns:IUniSocial_GetTasks_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveTaskFromList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/RemoveTaskFromList" message="tns:IUniSocial_RemoveTaskFromList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUniSocial/RemoveTaskFromListResponse" message="tns:IUniSocial_RemoveTaskFromList_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IUniSocial" type="tns:IUniSocial">
@@ -40,8 +50,17 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetCurrentTasks">
-      <soap:operation soapAction="http://tempuri.org/IUniSocial/GetCurrentTasks" style="document" />
+    <wsdl:operation name="GetTasks">
+      <soap:operation soapAction="http://tempuri.org/IUniSocial/GetTasks" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveTaskFromList">
+      <soap:operation soapAction="http://tempuri.org/IUniSocial/RemoveTaskFromList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

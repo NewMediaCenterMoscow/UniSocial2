@@ -13,16 +13,28 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetCurrentTasks">
+  <xs:element name="GetTasks">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetCurrentTasksResponse">
+  <xs:element name="GetTasksResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Worker.Model" minOccurs="0" name="GetCurrentTasksResult" nillable="true" type="q2:ArrayOfCollectTask" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Worker.Model" minOccurs="0" name="GetTasksResult" nillable="true" type="q2:ArrayOfCollectTask" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveTaskFromList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Worker.Model" minOccurs="0" name="CollectTask" nillable="true" type="q3:CollectTask" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveTaskFromListResponse">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>

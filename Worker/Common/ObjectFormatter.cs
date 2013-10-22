@@ -123,8 +123,8 @@ namespace Worker.Common
 			s.Write("\""); s.Write(obj.PhotoMaxOrig); s.Write("\",");
 
 			s.Write("\""); s.Write(obj.HasMobile); s.Write("\",");
-			s.Write("\""); s.Write(obj.HomePhone); s.Write("\",");
-			s.Write("\""); s.Write(obj.MobilePhone); s.Write("\",");
+			s.Write("\""); s.Write(obj.HomePhone.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.MobilePhone.Replace("\"", "\"\"")); s.Write("\",");
 
 			s.Write("\""); s.Write(obj.University); s.Write("\",");
 			s.Write("\""); s.Write(obj.University == 0 ? "" : obj.UniversityName.Replace("\"", "\"\"")); s.Write("\",");

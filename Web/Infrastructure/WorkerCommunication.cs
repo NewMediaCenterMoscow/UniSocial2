@@ -27,9 +27,9 @@ namespace Web.Infrastructure
 			uniSocialClient.StartNewTask(ct);
 		}
 
-		public List<CollectTask> GetCurrentTasks()
+		public List<CollectTask> GetTasks()
 		{
-			return uniSocialClient.GetCurrentTasks();
+			return uniSocialClient.GetTasks();
 		}
 
 	}

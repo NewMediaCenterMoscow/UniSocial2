@@ -10,7 +10,7 @@ namespace Web.Controllers
 	{
 		public ActionResult Index()
 		{
-			var allTasks = wkComm.GetCurrentTasks();
+			var allTasks = wkComm.GetTasks();
 
 			return View(allTasks);
 		}
