@@ -101,9 +101,9 @@ namespace Worker.Common
 			s.Write("\""); s.Write(obj.Date); s.Write("\",");
 			s.Write("\""); s.Write(obj.PostType.ToString()); s.Write("\",");
 			s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-			s.Write("\""); s.Write(obj.Comments.Count); s.Write("\",");
-			s.Write("\""); s.Write(obj.Likes.Count); s.Write("\",");
-			s.Write("\""); s.Write(obj.Reposts.Count); s.Write("\",");
+			s.Write("\""); s.Write(obj.Comments != null ? obj.Comments.Count : 0); s.Write("\",");
+			s.Write("\""); s.Write(obj.Likes != null ? obj.Likes.Count : 0); s.Write("\",");
+			s.Write("\""); s.Write(obj.Reposts != null ? obj.Reposts.Count : 0); s.Write("\",");
 
 
 			if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
