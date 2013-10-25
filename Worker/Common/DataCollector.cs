@@ -60,6 +60,9 @@ namespace Worker.Common
 			bufferBlock.Complete();
 
 			await outputBlock.Completion;
+
+			inputRepo.Dispose();
+			outputRepo.Dispose();
 		}
 
 		IRepository getRepository(CollectTaskIO collectTaskIO)

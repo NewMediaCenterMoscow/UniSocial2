@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Worker.Common;
 using Worker.Repository;
@@ -22,9 +23,6 @@ namespace Worker.Repository
 
 		public void WriteResult(object Object)
 		{
-			if (Object == null)
-				return;
-
 			var stream = formatter.ToCSVStream(Object);
 
 			if (stream == null)
@@ -43,6 +41,11 @@ namespace Worker.Repository
 		public IEnumerable<string> GetInputData()
 		{
 			return File.ReadLines(filename);
+		}
+
+		public void Dispose()
+		{
+			
 		}
 	}
 }

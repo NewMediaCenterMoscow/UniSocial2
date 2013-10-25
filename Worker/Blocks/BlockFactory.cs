@@ -163,8 +163,8 @@ namespace Worker.Blocks
 				}
 
 				return result;
-			});
-			//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
+			//});
+			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
 		}
 
 		public ActionBlock<object> WriteResults(IRepository Repo)
@@ -172,8 +172,10 @@ namespace Worker.Blocks
 			return 
 				new ActionBlock<object>(o =>
 				{
-					Repo.WriteResult(o);
+					if(o != null)
+						Repo.WriteResult(o);
 				});
+				//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, BoundedCapacity = 1 });
 		}
 
 		//public TransformBlock<object, Stream> ToCSVStream()

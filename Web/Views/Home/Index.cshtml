@@ -3,14 +3,14 @@
 @{
 	ViewBag.Title = "Home Page";
 
-	var completedTask = Model.Where(t => t.IsCompleted == true);
-	var inProcessTask = Model.Where(t => t.IsCompleted != true);
+	var completedTask = Model.Where(t => t.IsCompleted == true).ToList();
+	var inProcessTask = Model.Where(t => t.IsCompleted != true).ToList();
 }
 
 <div class="jumbotron">
 	<div class="container">
 
-		@if (Model.Count > 0)
+		@if (inProcessTask.Count > 0)
 		{
 			<h1>Current collect tasks</h1>
 			<ul>
@@ -35,13 +35,16 @@
 
 <div class="container">
 
-	<h1>Completed task</h1>
+	@if (completedTask.Count != 0)
+	{
+		<h1>Completed task</h1>
 
-	<ul>
-		@foreach (var item in completedTask)
-		{
-			var output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
-			<li>@item.SocialNetwork: @item.Method - @output</li>
-		}
-	</ul>
+		<ul>
+			@foreach (var item in completedTask)
+			{
+				var output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+				<li>@item.SocialNetwork: @item.Method - @output</li>
+			}
+		</ul>
+	}
 </div>

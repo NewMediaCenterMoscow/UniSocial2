@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +12,49 @@ namespace Worker.Repository
 		string connStr;
 		string queryForInputData;
 
+		NpgsqlConnection writeConn;
+
 		public DbRepository(string ConnectionString, string QueryForInputData = "")
 		{
 			connStr = ConnectionString;
 			queryForInputData = QueryForInputData;
+
+			writeConn = new NpgsqlConnection(connStr);
 		}
 
 
 		public IEnumerable<string> GetInputData()
 		{
-			throw new NotImplementedException();
+			if (queryForInputData == "")
+				yield break;
+
+			var conn = new NpgsqlConnection(connStr);
+			conn.Open();
+
+			NpgsqlCommand cmd = new NpgsqlCommand(queryForInputData, conn);
+			var reader = cmd.ExecuteReader();
+
+			while (reader.Read())
+				yield return reader.GetString(0);
 		}
 
 		public void WriteResult(object Object)
 		{
-			throw new NotImplementedException();
+			if (writeConn.State != System.Data.ConnectionState.Open)
+				writeConn.Open();
+
+
+		}
+
+		public void Dispose()
+		{
+			if (writeConn != null)
+			{
+				if(writeConn.State != System.Data.ConnectionState.Closed)
+					writeConn.Close();
+
+				writeConn.Dispose();
+			}
 		}
 	}
 }

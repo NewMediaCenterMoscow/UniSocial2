@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Worker.Repository
 {
-	interface IRepository
+	interface IRepository : IDisposable
 	{
 		IEnumerable<string> GetInputData();
 
