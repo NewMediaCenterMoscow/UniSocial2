@@ -19,7 +19,7 @@ namespace Worker.Common
 
 			formatters.Add(typeof(VkUser), formatVkUser);
 			formatters.Add(typeof(VkGroup), formatVkGroup);
-			formatters.Add(typeof(VkPost), formatVkPost);
+			formatters.Add(typeof(VkPost), formatVkPostWithCounts);
 			formatters.Add(typeof(VkUserSubscriptions), formatVkUserSubscriptions);
 			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
 			formatters.Add(typeof(VkFriends), formatVkFriends);
@@ -71,7 +71,7 @@ namespace Worker.Common
 				var copyPost = obj.CopyHistory.First();
 
 				s.Write("\""); s.Write(copyPost.Text.Replace("\"", "\"\"")); s.Write("\","); // Text - from copy post
-				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+				s.Write("\""); s.Write(obj.FromId); s.Write("\",");
 
 				s.Write("\""); s.Write(copyPost.Date.ToUnixTimestamp()); s.Write("\",");
 				s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
@@ -81,12 +81,46 @@ namespace Worker.Common
 			else
 			{
 				s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-				s.Write("\""); s.Write(obj.SignerId); s.Write("\",");
+				s.Write("\""); s.Write(obj.FromId); s.Write("\",");
 
 				s.Write("\""); s.Write(0); s.Write("\","); // copy_post_dae
 				s.Write("\""); s.Write(0); s.Write("\","); // copy_owner_id
 				s.Write("\""); s.Write(0); s.Write("\","); // copy_post_id
 				s.Write("\""); s.Write(""); s.Write("\""); // copy_text
+			}
+
+			s.Write("\n");
+		}
+		private static void formatVkPostWithCounts(object o, StreamWriter s)
+		{
+			var obj = o as VkPost;
+
+			s.Write("\""); s.Write(obj.Id); s.Write("\",");
+			s.Write("\""); s.Write(obj.FromId); s.Write("\",");
+			s.Write("\""); s.Write(obj.ToId); s.Write("\",");
+			s.Write("\""); s.Write(obj.Date); s.Write("\",");
+			s.Write("\""); s.Write(obj.PostType.ToString()); s.Write("\",");
+			s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.Comments.Count); s.Write("\",");
+			s.Write("\""); s.Write(obj.Likes.Count); s.Write("\",");
+			s.Write("\""); s.Write(obj.Reposts.Count); s.Write("\",");
+
+
+			if (obj.CopyHistory != null && obj.CopyHistory.Count > 0)
+			{
+				var copyPost = obj.CopyHistory.First();
+
+				s.Write("\""); s.Write(copyPost.Id); s.Write("\",");
+				s.Write("\""); s.Write(copyPost.FromId); s.Write("\",");
+				s.Write("\""); s.Write(copyPost.ToId); s.Write("\",");
+				s.Write("\""); s.Write(copyPost.Text.Replace("\"", "\"\"")); s.Write("\"");
+			}
+			else
+			{
+				s.Write("\""); s.Write(0); s.Write("\",");
+				s.Write("\""); s.Write(0); s.Write("\",");
+				s.Write("\""); s.Write(0); s.Write("\",");
+				s.Write("\""); s.Write(""); s.Write("\"");
 			}
 
 			s.Write("\n");

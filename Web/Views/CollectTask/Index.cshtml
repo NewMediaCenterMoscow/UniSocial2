@@ -66,9 +66,10 @@
 
 							@foreach (var filename in sourceFiles)
 							{
+								var selected = Model.InputFile == filename ? "checked='checked'" : "";
 								<div class="radio">
 									<label>
-										<input type="radio" name="inputFile" id="inputFile" value="@filename">
+										<input type="radio" name="inputFile" id="inputFile" value="@filename" @selected>
 										@filename
 									</label>
 								</div>
@@ -78,7 +79,7 @@
 
 						<div class="form-group">
 							<label for="outputFilename">Output filename</label>
-							<input type="text" class="form-control" name="outputFilename" placeholder="Enter output filename">
+							<input type="text" class="form-control" name="outputFilename" placeholder="Enter output filename" value="@Model.OutputFilename">
 						</div>
 						
 						

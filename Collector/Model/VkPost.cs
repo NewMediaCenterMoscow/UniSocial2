@@ -53,7 +53,7 @@ namespace Collector.Model
 		public VkNestedCount Reposts { get; set; }
 
 		//[JsonProperty("signer_id")]
-		public long SignerId { get; set; }
+		//public long SignerId { get; set; }
 
 		////[JsonProperty("reply_owner_id")]
 		//public long ReplyOwnerId { get; set; }

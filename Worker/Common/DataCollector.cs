@@ -35,21 +35,17 @@ namespace Worker.Common
 			var inputRepo = getRepository(collectTask.Input);
 			var outputRepo = getRepository(collectTask.Output);
 
-			//var inputBlock = blockFactory.FileToStream();
-			//var idsBlock = blockFactory.StremToIds();
 			var bufferBlock = blockFactory.Buffer();
 			var bacthBlock = blockFactory.Batch<string>();
 			var processBlock = blockFactory.Process();
+			var outputBufferBlock = blockFactory.OutputBuffer();
 			var outputBlock = blockFactory.WriteResults(outputRepo);
 
-			//blockController.LinkWithCompletion(inputBlock, idsBlock);
-			//blockController.LinkWithCompletion(idsBlock, bacthBlock);
 			blockController.LinkWithCompletion(bufferBlock, bacthBlock);
 			blockController.LinkWithCompletion(bacthBlock, processBlock);
-			blockController.LinkWithCompletion(processBlock, outputBlock);
-
-			//inputBlock.Post( (collectTask.Input as CollectTaskIOFile).Filename );
-			//inputBlock.Complete();
+			blockController.LinkWithCompletion(processBlock, outputBufferBlock);
+			blockController.LinkWithCompletion(outputBufferBlock, outputBlock);
+			//blockController.LinkWithCompletion(processBlock, outputBlock);
 
 			// Read data and send to blocks
 			foreach (var item in inputRepo.GetInputData())

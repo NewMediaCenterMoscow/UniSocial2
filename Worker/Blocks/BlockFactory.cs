@@ -164,7 +164,13 @@ namespace Worker.Blocks
 
 				return result;
 			//});
-			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
+			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 10 });
+		}
+
+		public BufferBlock<object> OutputBuffer()
+		{
+			return
+				new BufferBlock<object>();
 		}
 
 		public ActionBlock<object> WriteResults(IRepository Repo)
