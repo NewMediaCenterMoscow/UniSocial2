@@ -28,7 +28,7 @@ namespace Worker.Repository
 			if (stream == null)
 				return;
 
-			using (var file = File.Open(filename + Thread.CurrentThread.ManagedThreadId, FileMode.Append, FileAccess.Write, FileShare.None))
+			using (var file = File.Open(filename, FileMode.Append, FileAccess.Write, FileShare.None))
 			{
 				stream.Seek(0, SeekOrigin.Begin);
 				stream.CopyTo(file);
