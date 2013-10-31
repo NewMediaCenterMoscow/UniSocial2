@@ -181,21 +181,6 @@ namespace Worker.Blocks
 					if(o != null)
 						Repo.WriteResult(o);
 				});
-				//}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, BoundedCapacity = 1 });
 		}
-
-		//public TransformBlock<object, Stream> ToCSVStream()
-		//{
-		//	return new TransformBlock<object, Stream>(o => {
-
-		//		if (o == null)
-		//			return null;
-
-		//		var objectFormatter = new ObjectFormatter();
-		//		var stream = objectFormatter.ToCSVStream(o);
-
-		//		return stream;
-		//	});
-		//}
 	}
 }

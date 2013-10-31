@@ -71,5 +71,11 @@ namespace Collector.Model
 			errorContext.Handled = true;
 		}
 
+
+		public override string ToString()
+		{
+			return ToId + "\t-\t" + Id;
+		}
+
 	}
 }

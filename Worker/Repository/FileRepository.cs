@@ -21,9 +21,9 @@ namespace Worker.Repository
 			formatter = new ObjectFormatter();
 		}
 
-		public void WriteResult(object Object)
+		public void WriteResult(object Obj)
 		{
-			var stream = formatter.ToCSVStream(Object);
+			var stream = formatter.ToCSVStream(Obj);
 
 			if (stream == null)
 				return;

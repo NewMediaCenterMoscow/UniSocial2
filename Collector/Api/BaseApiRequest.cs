@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Collector.Api
 {
-	public class ApiRequestParam
+	public class ApiRequestParam : ICloneable
 	{
 		public ApiRequestParam(string Method, Dictionary<string, string> Params)
 		{
@@ -37,6 +37,19 @@ namespace Collector.Api
 
 		public string Method;
 		public Dictionary<string,string> Params;
+
+		public object Clone()
+		{
+			var newParams = new ApiRequestParam(
+				this.Method,
+				new Dictionary<string, string>( this.Params.Count )
+			);
+
+			foreach (var item in this.Params)
+				newParams.Params.Add(item.Key, item.Value);
+
+			return newParams;
+		}
 	}
 
 	public abstract class BaseApiRequest : IApiRequest
@@ -106,7 +119,9 @@ namespace Collector.Api
 			if (!requestParams.ContainsKey(method))
 				return new ApiRequestParam(method);
 
-			var result = requestParams[method];
+			var reqParam = requestParams[method];
+
+			var result = reqParam.Clone() as ApiRequestParam;
 			if (String.IsNullOrEmpty(result.Method))
 				result.Method = method;
 

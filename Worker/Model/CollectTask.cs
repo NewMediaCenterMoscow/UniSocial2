@@ -12,6 +12,7 @@ namespace Worker.Model
 	[Serializable()]
 	[DataContract]
 	[KnownType(typeof(CollectTaskIOFile))]
+	[KnownType(typeof(CollectTaskIODatabase))]
 	public class CollectTask
 	{
 		protected string _method;

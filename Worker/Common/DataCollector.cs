@@ -69,6 +69,10 @@ namespace Worker.Common
 			{
 				repo = new FileRepository((collectTaskIO as CollectTaskIOFile).Filename);
 			}
+			if (collectTaskIO is CollectTaskIODatabase)
+			{
+				repo = new DbRepository((collectTaskIO as CollectTaskIODatabase).ConnectionString);
+			}
 
 			return repo;
 		}

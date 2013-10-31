@@ -16,7 +16,15 @@
 			<ul>
 				@foreach (var item in inProcessTask)
 				{
-					var output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+					string output = "undefined";
+					if (item.Output is CollectTaskIOFile)
+					{
+						output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+					}
+					if (item.Output is CollectTaskIODatabase)
+					{
+						output = "database";
+					}
 					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)% - @output</li>
 				}
 			</ul>

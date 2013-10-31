@@ -16,7 +16,11 @@ namespace Worker.Common
 		public ObjectFormatter()
 		{
 			formatters = new Dictionary<Type,Action<object, StreamWriter>>();
+			setFormatters();
+		}
 
+		void setFormatters()
+		{
 			formatters.Add(typeof(VkUser), formatVkUser);
 			formatters.Add(typeof(VkGroup), formatVkGroup);
 			formatters.Add(typeof(VkPost), formatVkPostWithCounts);
@@ -24,32 +28,32 @@ namespace Worker.Common
 			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
 			formatters.Add(typeof(VkFriends), formatVkFriends);
 			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
-			
 		}
-
-		public Stream ToCSVStream(object Object)
+		
+		
+		public Stream ToCSVStream(object Obj)
 		{
 			var resultStream = new MemoryStream();
 			var writer = new StreamWriter(resultStream);
 
-			if (Object is List<object>)
+			var type = Helpers.GetObjectType(Obj);
+			var isList = Helpers.IsList(Obj);
+
+			if (type == null)
+				return null;
+
+			if (isList)
 			{
-				var listObjs = Object as List<object>;
-
-				if (listObjs.Count == 0)
-					return null;
-
-				var t = listObjs.First().GetType();
+				var listObjs = Obj as List<object>;
 
 				foreach (var item in listObjs)
 				{
-					formatters[t](item, writer);
+					formatters[type](item, writer);
 				}
 			}
 			else
 			{
-				var t = Object.GetType();
-				formatters[t](Object, writer);
+				formatters[type](Obj, writer);
 			}
 
 			writer.Flush();
