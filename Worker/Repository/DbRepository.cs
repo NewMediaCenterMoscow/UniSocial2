@@ -17,7 +17,6 @@ namespace Worker.Repository
 		string connStr;
 		string queryForInputData;
 
-		//DbProviderFactory factory;
 		NpgsqlConnection writeConn;
 
 		ObjectFormatter formatter;
