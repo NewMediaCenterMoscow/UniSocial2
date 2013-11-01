@@ -1,4 +1,5 @@
-﻿using Collector.Interface;
+﻿using Collector.Common;
+using Collector.Interface;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -156,6 +157,10 @@ namespace Worker.Blocks
 					{
 						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(collectTask.Method));
 					}
+				}
+				catch (ApiException ex)
+				{
+					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
 				}
 				catch (Exception ex)
 				{
