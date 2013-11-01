@@ -57,7 +57,7 @@ namespace Collector.Api
 		protected IApi api;
 		protected IDataExtractor dataExtractor;
 
-		protected Dictionary<string, ApiRequestParam> requestParams;
+		protected Dictionary<string, Dictionary<string, string>> requestParams;
 		protected Dictionary<string, Type> objectTypeForMethods;
 		protected Dictionary<string, int> batchSizes;
 		protected Dictionary<string, int> itemsMaxCounts;
@@ -72,7 +72,7 @@ namespace Collector.Api
 			api = Api;
 			dataExtractor = DataExtractor;
 
-			requestParams = new Dictionary<string, ApiRequestParam>();
+			requestParams = new Dictionary<string, Dictionary<string, string>>();
 			objectTypeForMethods = new Dictionary<string, Type>();
 			batchSizes = new Dictionary<string, int>();
 			itemsMaxCounts = new Dictionary<string, int>();
@@ -114,16 +114,14 @@ namespace Collector.Api
 			return objectTypeForMethods[Method];
 		}
 
-		protected ApiRequestParam getRequestParams(string method)
+		protected Dictionary<string,string> getRequestParams(string method)
 		{
 			if (!requestParams.ContainsKey(method))
-				return new ApiRequestParam(method);
+				return new Dictionary<string, string>();
 
-			var reqParam = requestParams[method];
+			var reqOrigParam = requestParams[method];
 
-			var result = reqParam.Clone() as ApiRequestParam;
-			if (String.IsNullOrEmpty(result.Method))
-				result.Method = method;
+			var result = new Dictionary<string, string>(reqOrigParam);
 
 			return result;
 		}
@@ -136,9 +134,11 @@ namespace Collector.Api
 
 		protected ApiRequestParam createRequestParam(string Method)
 		{
-			var param = getRequestParams(Method);
+			var parameters = getRequestParams(Method);
 
-			return param;
+			var req = new ApiRequestParam(Method, parameters);
+
+			return req;
 		}
 
 		protected async Task<object> executeRequest(ApiRequestParam param)

@@ -32,26 +32,20 @@ namespace Collector.Api
 			requestTypes.Add("wall.getReposts", ApiRequestType.ListForObject);
 			requestTypes.Add("friends.get", ApiRequestType.ListForObject);
 
-			requestParams.Add("groups.getById",
-				new ApiRequestParam(new Dictionary<string, string>() {
-					{ "fields", "members_count" } 
-				})
-			);
+			requestParams.Add("groups.getById", new Dictionary<string, string>() {
+				{ "fields", "members_count" } 
+			});
 			//requestParams.Add("groups.get",
 			//	new ApiRequestParam(new Dictionary<string, string>() {
 			//		{ "filter", "moder" } 
 			//	})
 			//);
-			requestParams.Add("users.get",
-				new ApiRequestParam(new Dictionary<string, string>() {
-					{ "fields", "education,contacts,nickname, screen_name, sex, bdate, city, country, timezone, photo_50, photo_100, photo_200, photo_max, has_mobile, online" } 
-				})
-			);
-			requestParams.Add("wall.get",
-				new ApiRequestParam(new Dictionary<string, string>() {
-					{ "filter", "all" } 
-				})
-			);
+			requestParams.Add("users.get", new Dictionary<string, string>() {
+				{ "fields", "education,contacts,nickname, screen_name, sex, bdate, city, country, timezone, photo_50, photo_100, photo_200, photo_max, has_mobile, online" } 
+			});
+			requestParams.Add("wall.get", new Dictionary<string, string>() {
+				{ "filter", "all" } 
+			});
 
 			itemsMaxCounts.Add("groups.getMembers", 10);
 			itemsMaxCounts.Add("groups.get", 1000);
