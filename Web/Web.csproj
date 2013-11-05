@@ -162,6 +162,7 @@
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\Project\main.js" />
     <Content Include="Scripts\_references.js" />
     <None Include="Service References\UniSocialService\item.disco" />
     <None Include="Service References\UniSocialService\configuration91.svcinfo" />

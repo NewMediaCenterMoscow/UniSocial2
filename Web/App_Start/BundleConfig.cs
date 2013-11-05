@@ -24,6 +24,9 @@ namespace Web
 					  "~/Content/font-awesome.css",
 					  "~/Content/site.css"
 					  ));
+
+			bundles.Add(new ScriptBundle("~/bundles/project").Include(
+					  "~/Scripts/Project/main.js"));
 		}
 	}
 }

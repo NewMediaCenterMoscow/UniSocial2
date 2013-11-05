@@ -183,8 +183,17 @@ namespace Worker.Blocks
 			return 
 				new ActionBlock<object>(o =>
 				{
-					if(o != null)
-						Repo.WriteResult(o);
+					if (o != null)
+					{
+						try
+						{
+							Repo.WriteResult(o);
+						}
+						catch (Exception ex)
+						{
+							Trace.TraceEvent(TraceEventType.Error, collectTask.Method.GetHashCode(), ex.Message);
+						}
+					}
 				});
 		}
 	}

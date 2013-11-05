@@ -61,16 +61,14 @@ namespace Worker.Repository
 			var tableName = getTableNameFromObject(Obj);
 			var query = "COPY " + tableName + " FROM STDIN WITH CSV";
 
-			NpgsqlCopyIn cin = null;
+			if (writeConn.State != System.Data.ConnectionState.Open)
+				writeConn.Open();
+
+			var cmd = new NpgsqlCommand(query, writeConn);
+			var cin = new NpgsqlCopyIn(cmd, writeConn);
 
 			try
 			{
-				if (writeConn.State != System.Data.ConnectionState.Open)
-					writeConn.Open();
-
-				var cmd = new NpgsqlCommand(query, writeConn);
-				cin = new NpgsqlCopyIn(cmd, writeConn);
-
 				cin.Start();
 
 				dataStream.Seek(0, SeekOrigin.Begin);
@@ -99,8 +97,8 @@ namespace Worker.Repository
 		void setTableNames()
 		{
 			tableNames.Add(typeof(VkPost), "new_post");
+			tableNames.Add(typeof(VkFriends), "new_friends");
 		}
-
 
 		string getTableNameFromObject(object obj)
 		{
