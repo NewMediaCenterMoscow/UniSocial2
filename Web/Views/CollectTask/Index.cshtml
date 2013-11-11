@@ -20,12 +20,6 @@
 			<div id="collapseOne" class="panel-collapse collapse in">
 				<div class="panel-body">
 
-					@*<div class="form-group">
-							<label for="inputFile">Select input file</label>
-							<input type="file" name="inputFile" id="inputFile">
-							<p class="help-block">File contains user or group ids separated by new line</p>
-						</div>*@
-
 					@using (@Html.BeginForm())
 					{
 						@Html.ValidationSummary()
@@ -61,20 +55,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputFile">Select input file</label>
+							<label for="inputFile">Input filename</label>
+							<input type="text" class="form-control" id="inputFile" name="inputFile" placeholder="Enter input filename" value="@Model.InputFile">
 							<p class="help-block">File contains user or group ids separated by new line</p>
-
-							@foreach (var filename in sourceFiles)
-							{
-								var selected = Model.InputFile == filename ? "checked='checked'" : "";
-								<div class="radio">
-									<label>
-										<input type="radio" name="inputFile" id="inputFile" value="@filename" @selected>
-										@filename
-									</label>
-								</div>
-							}
-
 						</div>
 
 						<div class="form-group">

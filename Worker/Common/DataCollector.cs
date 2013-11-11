@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Worker.Blocks;
@@ -52,6 +53,17 @@ namespace Worker.Common
 			{
 				bufferBlock.Post(item);
 				collectTask.AllItems++;
+
+				//if (collectTask.AllItems % 1024 == 0)
+				//	Thread.Sleep(TimeSpan.FromMinutes(0.5));
+				//else if (collectTask.AllItems % 4096 == 0)
+				//	Thread.Sleep(TimeSpan.FromMinutes(2));
+				if (collectTask.AllItems % 16384 == 0)
+					Thread.Sleep(TimeSpan.FromMinutes(1));
+				else if (collectTask.AllItems % 65536 == 0)
+					Thread.Sleep(TimeSpan.FromMinutes(10));
+				else if (collectTask.AllItems % 524288 == 0)
+					Thread.Sleep(TimeSpan.FromMinutes(30));
 			}
 			bufferBlock.Complete();
 

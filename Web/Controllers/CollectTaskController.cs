@@ -16,8 +16,6 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
-			ViewBag.SourceFiles = service.GetPossibleSourceFiles();
-
             return View(new CollectForm());
         }
 
@@ -26,7 +24,7 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var inputFilename = service.GetSourceFilename(collectForm.InputFile);
+				var inputFilename = collectForm.InputFile;
 
 				CollectTask ct = new CollectTask(collectForm.Network, collectForm.Method);
 				ct.Input = new CollectTaskIOFile(inputFilename);
@@ -38,8 +36,8 @@ namespace Web.Controllers
 				}
 				else
 				{
-					var outpuFilename = service.GetResultFilename(collectForm.OutputFilename);
-					ct.Output = new CollectTaskIOFile(outpuFilename);
+					var outputFilename = collectForm.OutputFilename;
+					ct.Output = new CollectTaskIOFile(outputFilename);
 				}
 
 
@@ -49,8 +47,6 @@ namespace Web.Controllers
 			}
 			else
 			{
-				ViewBag.SourceFiles = service.GetPossibleSourceFiles();
-
 				return View(collectForm);
 			}
 		}

@@ -10,7 +10,6 @@ namespace Web.Controllers
 	public class UniSocialBaseController : Controller
 	{
 		internal static WorkerCommunication wkComm = new WorkerCommunication();
-		internal static Service service = new Service();
 
 		static UniSocialBaseController()
 		{

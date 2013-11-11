@@ -127,17 +127,20 @@ namespace Worker.Blocks
 			return new TransformBlock<string[], object>(async ids =>
 			{
 				collectTask.CounterItems += ids.Length;
-				if (collectTask.CounterItems % 64 == 0)
+				if (collectTask.CounterItems % 1024 == 0)
+				{
 					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
+					Trace.Flush();
+				}
 
-				if (collectTask.CounterItems % 10000 == 0)
-				{
-					System.Threading.Thread.Sleep(TimeSpan.FromSeconds(180));
-				}
-				else if (collectTask.CounterItems % 1000 == 0)
-				{
-					System.Threading.Thread.Sleep(TimeSpan.FromSeconds(60));
-				}
+				//if (collectTask.CounterItems % 10000 == 0)
+				//{
+				//	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(180));
+				//}
+				//else if (collectTask.CounterItems % 1000 == 0)
+				//{
+				//	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(60));
+				//}
 
 				var requestType = apiRequest.GetRequestType(method);
 
@@ -160,16 +163,16 @@ namespace Worker.Blocks
 				}
 				catch (ApiException ex)
 				{
-					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
+					//Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
 				}
 				catch (Exception ex)
 				{
-					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
+					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ">>>" + ex.Message);
 				}
 
 				return result;
 			//});
-			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 10 });
+			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
 		}
 
 		public BufferBlock<object> OutputBuffer()
