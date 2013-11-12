@@ -1,4 +1,4 @@
-﻿@model List<CollectTask>
+﻿@model List<Web.UniSocialService.CollectTask>
 
 @{
 	ViewBag.Title = "Home Page";
@@ -17,11 +17,11 @@
 				@foreach (var item in inProcessTask)
 				{
 					string output = "undefined";
-					if (item.Output is CollectTaskIOFile)
+					if (item.Output is Web.UniSocialService.CollectTaskIOFile)
 					{
-						output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+						output = Path.GetFileName((item.Output as Web.UniSocialService.CollectTaskIOFile).Filename);
 					}
-					if (item.Output is CollectTaskIODatabase)
+					if (item.Output is Web.UniSocialService.CollectTaskIODatabase)
 					{
 						output = "database";
 					}
@@ -51,11 +51,11 @@
 			@foreach (var item in completedTask)
 			{
 				string output = "undefined";
-				if (item.Output is CollectTaskIOFile)
+				if (item.Output is Web.UniSocialService.CollectTaskIOFile)
 				{
-					output = Path.GetFileName((item.Output as CollectTaskIOFile).Filename);
+					output = Path.GetFileName((item.Output as Web.UniSocialService.CollectTaskIOFile).Filename);
 				}
-				if (item.Output is CollectTaskIODatabase)
+				if (item.Output is Web.UniSocialService.CollectTaskIODatabase)
 				{
 					output = "database";
 				}

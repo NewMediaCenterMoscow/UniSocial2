@@ -163,9 +163,17 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\Project\main.js" />
     <Content Include="Scripts\_references.js" />
-    <None Include="Service References\UniSocialService\item.disco" />
     <None Include="Service References\UniSocialService\configuration91.svcinfo" />
     <None Include="Service References\UniSocialService\configuration.svcinfo" />
+    <None Include="Service References\UniSocialService\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UniSocialService\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UniSocialService\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\UniSocialService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -189,15 +197,9 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\CollectTask\Index.cshtml" />
     <Content Include="Views\CollectTask\CollectStarted.cshtml" />
-    <None Include="Service References\UniSocialService\item.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\UniSocialService\item1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\UniSocialService\item2.xsd">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Service References\UniSocialService\Web.UniSocialService.CollectTask.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
     <None Include="Service References\UniSocialService\UniSocialService.wsdl" />
   </ItemGroup>
   <ItemGroup>
@@ -208,12 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\UniSocialService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Worker\Worker.csproj">
-      <Project>{9bcd8c4f-084d-46dd-8be5-68c3622eb9a9}</Project>
-      <Name>Worker</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

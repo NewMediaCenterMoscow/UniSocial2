@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Security;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,13 @@ namespace Worker.Service
 	[ServiceContract]
 	public interface IUniSocial
 	{
-		[OperationContract]
+		[OperationContract(IsOneWay=true)]
 		void StartNewTask(CollectTask CollectTask);
 
 		[OperationContract]
 		List<CollectTask> GetTasks();
 
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void RemoveTaskFromList(CollectTask CollectTask);
 	}
 }

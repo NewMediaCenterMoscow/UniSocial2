@@ -11,17 +11,12 @@ namespace Worker.Model
 {
 	[Serializable()]
 	[DataContract]
-	[KnownType(typeof(CollectTaskIOFile))]
-	[KnownType(typeof(CollectTaskIODatabase))]
 	public class CollectTask
 	{
-		protected string _method;
-		protected string _socialNetworks;
-
 		[DataMember]
-		public string SocialNetwork { get { return _socialNetworks; } protected set { _socialNetworks = value; } }
+		public string SocialNetwork { get; set; }
 		[DataMember]
-		public string Method { get { return _method; } protected set { _method = value; } }
+		public string Method { get; set; }
 
 		#region Progress & Error message
 		[DataMember]
@@ -41,29 +36,9 @@ namespace Worker.Model
 		[DataMember]
 		public CollectTaskIO Output { get; set; }
 
-		public CollectTask(string Method)
-		{
-			_method = Method;
-
-			IsCompleted = false;
-
-			AllItems = 0;
-			CounterItems = 0;
-		}
-		public CollectTask(string SocialNetwork, string Method)
-		{
-			_socialNetworks = SocialNetwork;
-			_method = Method;
-
-			IsCompleted = false;
-		}
-
 		public override string ToString()
 		{
-			var res = _socialNetworks + ": " + _method;
-
-			//if (AllItems != 0)
-			//	res += " [" + Math.Round((double)CounterItems / AllItems * 100, 2) + "%]";
+			var res = SocialNetwork + ": " + Method;
 
 			res += " - " + Input.ToString();
 

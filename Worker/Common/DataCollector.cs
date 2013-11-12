@@ -48,22 +48,31 @@ namespace Worker.Common
 			blockController.LinkWithCompletion(outputBufferBlock, outputBlock);
 			//blockController.LinkWithCompletion(processBlock, outputBlock);
 
+			int thresold = 1000;
 			// Read data and send to blocks
 			foreach (var item in inputRepo.GetInputData())
 			{
 				bufferBlock.Post(item);
 				collectTask.AllItems++;
 
-				//if (collectTask.AllItems % 1024 == 0)
-				//	Thread.Sleep(TimeSpan.FromMinutes(0.5));
-				//else if (collectTask.AllItems % 4096 == 0)
-				//	Thread.Sleep(TimeSpan.FromMinutes(2));
-				if (collectTask.AllItems % 16384 == 0)
-					Thread.Sleep(TimeSpan.FromMinutes(1));
-				else if (collectTask.AllItems % 65536 == 0)
-					Thread.Sleep(TimeSpan.FromMinutes(10));
-				else if (collectTask.AllItems % 524288 == 0)
-					Thread.Sleep(TimeSpan.FromMinutes(30));
+				//if (outputBlock.InputCount > 100)
+				//	Console.Error.WriteLine("Warning Input block");
+				//if (outputBufferBlock.Count > 100)
+				//	Console.Error.WriteLine("Warning Input block");
+
+				while (outputBlock.InputCount > thresold)
+				{
+					Thread.Sleep(500);
+					Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
+				}
+				Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
+
+				//if (collectTask.AllItems % 16384 == 0)
+				//	Thread.Sleep(TimeSpan.FromMinutes(3));
+				//else if (collectTask.AllItems % 65536 == 0)
+				//	Thread.Sleep(TimeSpan.FromMinutes(10));
+				//else if (collectTask.AllItems % 524288 == 0)
+				//	Thread.Sleep(TimeSpan.FromMinutes(30));
 			}
 			bufferBlock.Complete();
 

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Web;
 using Web.Models;
 using Web.UniSocialService;
-using Worker.Model;
 
 namespace Web.Infrastructure
 {

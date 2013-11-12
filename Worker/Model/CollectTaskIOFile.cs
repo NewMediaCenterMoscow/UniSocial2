@@ -12,18 +12,12 @@ namespace Worker.Model
 	[DataContract]
 	public class CollectTaskIOFile : CollectTaskIO
 	{
-		protected string _filename;
 		[DataMember]
-		public string Filename { get { return _filename; } protected set { _filename = value; } }
-
-		public CollectTaskIOFile(string Filename)
-		{
-			_filename = Filename;
-		}
+		public string Filename { get; set; }
 
 		public override string ToString()
 		{
-			return "File: " + _filename;
+			return "File: " + Filename;
 		}
 
 	}

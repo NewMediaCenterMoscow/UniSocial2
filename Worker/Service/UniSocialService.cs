@@ -34,23 +34,27 @@ namespace Worker.Service
 			tasks.Add(CollectTask);
 
 			Trace.TraceEvent(TraceEventType.Start, CollectTask.GetHashCode(), CollectTask.ToString());
-			var task = dataCollector.Collect(CollectTask);
 
-			task.ContinueWith(
-				t =>
-				{
-					if (t.IsFaulted)
+			Task.Factory.StartNew(() => {
+
+				var task = dataCollector.Collect(CollectTask);
+
+				task.ContinueWith(
+					t =>
 					{
-						Trace.TraceEvent(TraceEventType.Error, CollectTask.GetHashCode(), t.Exception.Message);
-						CollectTask.ErrorMessage = t.Exception.Message;
+						if (t.IsFaulted)
+						{
+							Trace.TraceEvent(TraceEventType.Error, CollectTask.GetHashCode(), t.Exception.Message);
+							CollectTask.ErrorMessage = t.Exception.Message;
+						}
+
+						CollectTask.IsCompleted = true;
+						//tasks.Remove(CollectTask);
+						Trace.TraceEvent(TraceEventType.Stop, CollectTask.GetHashCode(), CollectTask.ToString());
 					}
+				);			
 
-					CollectTask.IsCompleted = true;
-					//tasks.Remove(CollectTask);
-					Trace.TraceEvent(TraceEventType.Stop, CollectTask.GetHashCode(), CollectTask.ToString());
-				}
-			);
-
+			});
 		}
 
 		public List<CollectTask> GetTasks()

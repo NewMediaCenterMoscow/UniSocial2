@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="93N3aOsFXaP7c2D4Bc08kCf/9pc=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="fYTmTpKDb9y48q56a6dblito2h0=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IUniSocial">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IUniSocial" contract="UniSocialService.IUniSocial" bindingType="basicHttpBinding" address="http://localhost:9000/" bindingConfiguration="BasicHttpBinding_IUniSocial">
+    <endpoint name="BasicHttpBinding_IUniSocial" contract="UniSocialService.IUniSocial" bindingType="basicHttpBinding" address="http://127.0.0.1:9000/" bindingConfiguration="BasicHttpBinding_IUniSocial">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:9000/</serializedValue>
+          <serializedValue>http://127.0.0.1:9000/</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

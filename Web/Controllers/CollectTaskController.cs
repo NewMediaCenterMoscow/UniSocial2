@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Web.Infrastructure;
 using Web.Models;
-using Worker.Model;
+using Web.UniSocialService;
 
 namespace Web.Controllers
 {
@@ -26,18 +26,18 @@ namespace Web.Controllers
 			{
 				var inputFilename = collectForm.InputFile;
 
-				CollectTask ct = new CollectTask(collectForm.Network, collectForm.Method);
-				ct.Input = new CollectTaskIOFile(inputFilename);
+				CollectTask ct = new CollectTask() { SocialNetwork = collectForm.Network, Method = collectForm.Method };
+				ct.Input = new CollectTaskIOFile() { Filename = inputFilename };
 
 				if (collectForm.OutputInDb)
 				{
 					string connStr = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString;
-					ct.Output = new CollectTaskIODatabase(connStr);
+					ct.Output = new CollectTaskIODatabase() { ConnectionString = connStr };
 				}
 				else
 				{
 					var outputFilename = collectForm.OutputFilename;
-					ct.Output = new CollectTaskIOFile(outputFilename);
+					ct.Output = new CollectTaskIOFile() { Filename = outputFilename };
 				}
 
 

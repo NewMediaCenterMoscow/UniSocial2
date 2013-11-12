@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:9000" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://127.0.0.1:9000/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="ffca2dbd-dfff-4d4f-924a-3229c00ace01" SourceId="1" SourceUrl="http://localhost:9000/?xsd=xsd2" />
-    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="067e848e-1f67-4204-8a07-701267a189e8" SourceId="1" SourceUrl="http://localhost:9000/?xsd=xsd1" />
-    <MetadataFile FileName="UniSocialService.wsdl" MetadataType="Wsdl" ID="3493546e-dafe-4ea1-92ef-f0e44f2c0512" SourceId="1" SourceUrl="http://localhost:9000/?wsdl" />
-    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="efa142d9-1e9c-47cb-84bd-e8fc0b1a04de" SourceId="1" SourceUrl="http://localhost:9000/?disco" />
-    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="0a9bda1b-0b02-4512-a3d5-520414a65a5c" SourceId="1" SourceUrl="http://localhost:9000/?xsd=xsd0" />
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="87abc8b3-36a7-4fc8-ba71-76e9e6615ad6" SourceId="1" SourceUrl="http://127.0.0.1:9000/?xsd=xsd0" />
+    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="d33a018a-956a-44c4-92da-cf6c23c29d55" SourceId="1" SourceUrl="http://127.0.0.1:9000/?xsd=xsd1" />
+    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="123b8535-6130-4654-98d0-ea0dabf57baf" SourceId="1" SourceUrl="http://127.0.0.1:9000/?xsd=xsd2" />
+    <MetadataFile FileName="UniSocialService.wsdl" MetadataType="Wsdl" ID="c59a0283-8517-415a-ae27-15b5791c60dc" SourceId="1" SourceUrl="http://127.0.0.1:9000/?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

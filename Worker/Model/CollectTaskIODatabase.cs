@@ -13,12 +13,6 @@ namespace Worker.Model
 	{
 		protected string _connStr;
 		[DataMember]
-		public string ConnectionString { get { return _connStr; } protected set { _connStr = value; } }
-
-		public CollectTaskIODatabase(string ConnectionString)
-		{
-			_connStr = ConnectionString;
-		}
-
+		public string ConnectionString { get; set; }
 	}
 }
