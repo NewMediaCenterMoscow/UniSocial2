@@ -36,36 +36,31 @@ namespace Worker.Common
 			var inputRepo = getRepository(collectTask.Input);
 			var outputRepo = getRepository(collectTask.Output);
 
-			var bufferBlock = blockFactory.Buffer();
+			var inputBufferBlock = blockFactory.InputBuffer();
 			var bacthBlock = blockFactory.Batch<string>();
 			var processBlock = blockFactory.Process();
 			var outputBufferBlock = blockFactory.OutputBuffer();
 			var outputBlock = blockFactory.WriteResults(outputRepo);
 
-			blockController.LinkWithCompletion(bufferBlock, bacthBlock);
+			blockController.LinkWithCompletion(inputBufferBlock, bacthBlock);
 			blockController.LinkWithCompletion(bacthBlock, processBlock);
 			blockController.LinkWithCompletion(processBlock, outputBufferBlock);
 			blockController.LinkWithCompletion(outputBufferBlock, outputBlock);
 			//blockController.LinkWithCompletion(processBlock, outputBlock);
 
-			int thresold = 1000;
 			// Read data and send to blocks
 			foreach (var item in inputRepo.GetInputData())
 			{
-				bufferBlock.Post(item);
+				//inputBufferBlock.Post(item);
+				await inputBufferBlock.SendAsync(item);
 				collectTask.AllItems++;
 
-				//if (outputBlock.InputCount > 100)
-				//	Console.Error.WriteLine("Warning Input block");
-				//if (outputBufferBlock.Count > 100)
-				//	Console.Error.WriteLine("Warning Input block");
-
-				while (outputBlock.InputCount > thresold)
-				{
-					Thread.Sleep(500);
-					Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
-				}
-				Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
+				//while (outputBlock.InputCount > thresold)
+				//{
+				//	Thread.Sleep(500);
+				//	Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
+				//}
+				//Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
 
 				//if (collectTask.AllItems % 16384 == 0)
 				//	Thread.Sleep(TimeSpan.FromMinutes(3));
@@ -74,7 +69,7 @@ namespace Worker.Common
 				//else if (collectTask.AllItems % 524288 == 0)
 				//	Thread.Sleep(TimeSpan.FromMinutes(30));
 			}
-			bufferBlock.Complete();
+			inputBufferBlock.Complete();
 
 			await outputBlock.Completion;
 

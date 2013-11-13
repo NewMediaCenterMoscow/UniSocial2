@@ -102,9 +102,14 @@ namespace Worker.Blocks
 
 		#endregion
 
-		public BufferBlock<string> Buffer()
+		public BufferBlock<string> InputBuffer()
 		{
-			return new BufferBlock<string>();
+			return new BufferBlock<string>(
+				new DataflowBlockOptions()
+				{ 
+					BoundedCapacity = 1000
+				}
+			);
 		}
 
 		public BatchBlock<T> Batch<T>()
@@ -115,7 +120,7 @@ namespace Worker.Blocks
 			var bacthSize = apiRequest.GetRequestBatchSize(collectTask.Method);
 
 			return
-				new BatchBlock<T>(bacthSize);
+				new BatchBlock<T>(bacthSize, new GroupingDataflowBlockOptions() { BoundedCapacity = 1000 });
 		}
 
 		public TransformBlock<string[], object> Process()
@@ -125,79 +130,89 @@ namespace Worker.Blocks
 
 			var method = collectTask.Method;
 			return new TransformBlock<string[], object>(async ids =>
-			{
-				collectTask.CounterItems += ids.Length;
-				if (collectTask.CounterItems % 1024 == 0)
 				{
-					Trace.TraceEvent(TraceEventType.Information, method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
-					Trace.Flush();
-				}
+					collectTask.CounterItems += ids.Length;
 
-				//if (collectTask.CounterItems % 10000 == 0)
-				//{
-				//	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(180));
-				//}
-				//else if (collectTask.CounterItems % 1000 == 0)
-				//{
-				//	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(60));
-				//}
+					var requestType = apiRequest.GetRequestType(method);
 
-				var requestType = apiRequest.GetRequestType(method);
+					object result = null;
 
-				object result = null;
-
-				try
-				{
-					if (requestType == ApiRequestType.ObjectInfo)
+					try
 					{
-						result = await apiRequest.ExecuteRequest(method, ids[0]);
+						if (requestType == ApiRequestType.ObjectInfo)
+						{
+							result = await apiRequest.ExecuteRequest(method, ids[0]);
+						}
+						if (requestType == ApiRequestType.ListObjectsInfo)
+						{
+							result = await apiRequest.ExecuteRequest(method, ids.ToList());
+						}
+						if (requestType == ApiRequestType.ListForObject)
+						{
+							result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(collectTask.Method));
+						}
 					}
-					if (requestType == ApiRequestType.ListObjectsInfo)
+					catch (ApiException ex)
 					{
-						result = await apiRequest.ExecuteRequest(method, ids.ToList());
+						//Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
 					}
-					if (requestType == ApiRequestType.ListForObject)
+					catch (Exception ex)
 					{
-						result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(collectTask.Method));
+						Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ">>>" + ex.Message);
 					}
-				}
-				catch (ApiException ex)
-				{
-					//Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
-				}
-				catch (Exception ex)
-				{
-					Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ">>>" + ex.Message);
-				}
 
-				return result;
-			//});
-			}, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
+					return result;
+				}, new ExecutionDataflowBlockOptions() 
+				{ 
+					MaxDegreeOfParallelism = 5,
+					BoundedCapacity = 1000
+				}
+			);
 		}
 
 		public BufferBlock<object> OutputBuffer()
 		{
 			return
-				new BufferBlock<object>();
+				new BufferBlock<object>(
+					new DataflowBlockOptions()
+					{
+						BoundedCapacity = 1000
+					}
+				);
 		}
 
 		public ActionBlock<object> WriteResults(IRepository Repo)
 		{
-			return 
+			var i = 0;
+			return
 				new ActionBlock<object>(o =>
-				{
-					if (o != null)
 					{
-						try
+						if (o != null)
 						{
-							Repo.WriteResult(o);
-						}
-						catch (Exception ex)
-						{
-							Trace.TraceEvent(TraceEventType.Error, collectTask.Method.GetHashCode(), ex.Message);
+							try
+							{
+								Repo.WriteResult(o);
+
+								//if (collectTask.CounterItems % 1024 == 0)
+								//{
+								//	Trace.TraceEvent(TraceEventType.Information, collectTask.Method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
+								//	Trace.Flush();
+								//}
+
+								Console.WriteLine("Sended: " + collectTask.AllItems + " Handled: " + i++);
+
+							}
+							catch (Exception ex)
+							{
+								Trace.TraceEvent(TraceEventType.Error, collectTask.Method.GetHashCode(), ex.Message);
+							}
 						}
 					}
-				});
+					, new ExecutionDataflowBlockOptions() 
+					{
+						BoundedCapacity = 1000
+					}
+				);
 		}
 	}
 }
