@@ -16,16 +16,12 @@
 			<ul>
 				@foreach (var item in inProcessTask)
 				{
-					string output = "undefined";
-					if (item.Output is Web.UniSocialService.CollectTaskIOFile)
-					{
-						output = Path.GetFileName((item.Output as Web.UniSocialService.CollectTaskIOFile).Filename);
-					}
-					if (item.Output is Web.UniSocialService.CollectTaskIODatabase)
-					{
-						output = "database";
-					}
-					<li>@item.SocialNetwork: @item.Method - @Math.Round((double)item.CounterItems/item.AllItems*100,2)% - @output</li>
+					<li>
+						@String.Format("#{0} {1}:{2} - {3}/{4}", item.CollectTaskId, item.SocialNetwork, item.Method, item.CounterItems, item.AllItems)
+@*						#@item.CollectTaskId @item.SocialNetwork: @item.Method [@item.CounterItems / @item.AllItems]*@
+						&nbsp;|&nbsp;
+						@Html.ActionLink("Not send new items", "Cancel", new { controller="CollectTask", id=item.CollectTaskId })
+					</li>
 				}
 			</ul>
 		}
@@ -50,16 +46,11 @@
 		<ul>
 			@foreach (var item in completedTask)
 			{
-				string output = "undefined";
-				if (item.Output is Web.UniSocialService.CollectTaskIOFile)
-				{
-					output = Path.GetFileName((item.Output as Web.UniSocialService.CollectTaskIOFile).Filename);
-				}
-				if (item.Output is Web.UniSocialService.CollectTaskIODatabase)
-				{
-					output = "database";
-				}
-				<li>@item.SocialNetwork: @item.Method - @output</li>
+				<li>
+					#@item.CollectTaskId @item.SocialNetwork: @item.Method
+					&nbsp;|&nbsp;
+					@Html.ActionLink("Dismiss", "RemoveFromList", new { controller = "CollectTask", id = item.CollectTaskId })
+				</li>
 			}
 		</ul>
 	}

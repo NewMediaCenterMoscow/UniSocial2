@@ -3,6 +3,7 @@
   <xs:complexType name="CollectTask">
     <xs:sequence>
       <xs:element minOccurs="0" name="AllItems" type="xs:long" />
+      <xs:element minOccurs="0" name="CollectTaskId" type="xs:int" />
       <xs:element minOccurs="0" name="CounterItems" type="xs:long" />
       <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Input" nillable="true" type="tns:CollectTaskIO" />

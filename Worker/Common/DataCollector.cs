@@ -46,28 +46,15 @@ namespace Worker.Common
 			blockController.LinkWithCompletion(bacthBlock, processBlock);
 			blockController.LinkWithCompletion(processBlock, outputBufferBlock);
 			blockController.LinkWithCompletion(outputBufferBlock, outputBlock);
-			//blockController.LinkWithCompletion(processBlock, outputBlock);
 
 			// Read data and send to blocks
 			foreach (var item in inputRepo.GetInputData())
 			{
-				//inputBufferBlock.Post(item);
 				await inputBufferBlock.SendAsync(item);
 				collectTask.AllItems++;
 
-				//while (outputBlock.InputCount > thresold)
-				//{
-				//	Thread.Sleep(500);
-				//	Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
-				//}
-				//Console.WriteLine("Prcess: {0}, Output: {1}", processBlock.InputCount, outputBlock.InputCount);
-
-				//if (collectTask.AllItems % 16384 == 0)
-				//	Thread.Sleep(TimeSpan.FromMinutes(3));
-				//else if (collectTask.AllItems % 65536 == 0)
-				//	Thread.Sleep(TimeSpan.FromMinutes(10));
-				//else if (collectTask.AllItems % 524288 == 0)
-				//	Thread.Sleep(TimeSpan.FromMinutes(30));
+				if (collectTask.CancellationSource.IsCancellationRequested)
+					break;
 			}
 			inputBufferBlock.Complete();
 

@@ -10,23 +10,9 @@ namespace Web.Controllers
 	{
 		public ActionResult Index()
 		{
-			var allTasks = wkComm.GetTasks();
+			var allTasks = uniSocialClient.GetTasks();
 
 			return View(allTasks);
-		}
-
-		public ActionResult About()
-		{
-			ViewBag.Message = "Your application description page.";
-
-			return View();
-		}
-
-		public ActionResult Contact()
-		{
-			ViewBag.Message = "Your contact page.";
-
-			return View();
 		}
 	}
 }

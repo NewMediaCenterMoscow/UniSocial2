@@ -26,6 +26,9 @@ namespace Web.UniSocialService {
         private long AllItemsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CollectTaskIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long CounterItemsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -65,6 +68,19 @@ namespace Web.UniSocialService {
                 if ((this.AllItemsField.Equals(value) != true)) {
                     this.AllItemsField = value;
                     this.RaisePropertyChanged("AllItems");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CollectTaskId {
+            get {
+                return this.CollectTaskIdField;
+            }
+            set {
+                if ((this.CollectTaskIdField.Equals(value) != true)) {
+                    this.CollectTaskIdField = value;
+                    this.RaisePropertyChanged("CollectTaskId");
                 }
             }
         }
@@ -264,10 +280,16 @@ namespace Web.UniSocialService {
         System.Threading.Tasks.Task<System.Collections.Generic.List<Web.UniSocialService.CollectTask>> GetTasksAsync();
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IUniSocial/RemoveTaskFromList")]
-        void RemoveTaskFromList(Web.UniSocialService.CollectTask CollectTask);
+        void RemoveTaskFromList(int CollectTaskId);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IUniSocial/RemoveTaskFromList")]
-        System.Threading.Tasks.Task RemoveTaskFromListAsync(Web.UniSocialService.CollectTask CollectTask);
+        System.Threading.Tasks.Task RemoveTaskFromListAsync(int CollectTaskId);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IUniSocial/CancelTask")]
+        void CancelTask(int CollectTaskId);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IUniSocial/CancelTask")]
+        System.Threading.Tasks.Task CancelTaskAsync(int CollectTaskId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -313,12 +335,20 @@ namespace Web.UniSocialService {
             return base.Channel.GetTasksAsync();
         }
         
-        public void RemoveTaskFromList(Web.UniSocialService.CollectTask CollectTask) {
-            base.Channel.RemoveTaskFromList(CollectTask);
+        public void RemoveTaskFromList(int CollectTaskId) {
+            base.Channel.RemoveTaskFromList(CollectTaskId);
         }
         
-        public System.Threading.Tasks.Task RemoveTaskFromListAsync(Web.UniSocialService.CollectTask CollectTask) {
-            return base.Channel.RemoveTaskFromListAsync(CollectTask);
+        public System.Threading.Tasks.Task RemoveTaskFromListAsync(int CollectTaskId) {
+            return base.Channel.RemoveTaskFromListAsync(CollectTaskId);
+        }
+        
+        public void CancelTask(int CollectTaskId) {
+            base.Channel.CancelTask(CollectTaskId);
+        }
+        
+        public System.Threading.Tasks.Task CancelTaskAsync(int CollectTaskId) {
+            return base.Channel.CancelTaskAsync(CollectTaskId);
         }
     }
 }

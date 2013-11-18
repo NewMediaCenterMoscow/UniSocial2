@@ -23,7 +23,14 @@
   <xs:element name="RemoveTaskFromList">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Worker.Model" minOccurs="0" name="CollectTask" nillable="true" type="q3:CollectTask" />
+        <xs:element minOccurs="0" name="CollectTaskId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CancelTask">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CollectTaskId" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

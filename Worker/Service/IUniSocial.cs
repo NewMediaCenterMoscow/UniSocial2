@@ -19,6 +19,9 @@ namespace Worker.Service
 		List<CollectTask> GetTasks();
 
 		[OperationContract(IsOneWay = true)]
-		void RemoveTaskFromList(CollectTask CollectTask);
+		void RemoveTaskFromList(int CollectTaskId);
+
+		[OperationContract(IsOneWay = true)]
+		void CancelTask(int CollectTaskId);
 	}
 }

@@ -58,50 +58,6 @@ namespace Worker.Blocks
 
 		#endregion
 
-
-		#region Common blocks
-		//public TransformManyBlock<Stream, string> StremToIds()
-		//{
-		//	return 
-		//		new TransformManyBlock<Stream, string>(input => {
-		//			StreamReader reader = new StreamReader(input);
-		//			string result = reader.ReadToEnd();
-
-		//			input.Close();
-
-		//			var ret = result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-		//			collectTask.AllItems = ret.Length;
-		//			collectTask.CounterItems = 0;
-
-		//			return ret;
-		//		});
-		//}
-
-		public TransformBlock<string, Stream> FileToStream()
-		{
-			return 
-				new TransformBlock<string, Stream>(
-					filename => File.OpenRead(filename)
-				);
-		}
-
-		public ActionBlock<Stream> StreamToFile(string Filename)
-		{
-			return
-				new ActionBlock<Stream>(stream => {
-					if(stream != null)
-						using (var file = File.Open(Filename, FileMode.Append, FileAccess.Write,FileShare.None))
-						{
-							stream.Seek(0, SeekOrigin.Begin);
-							stream.CopyTo(file);
-							file.Flush();
-						}
-				});
-		}
-
-		#endregion
-
 		public BufferBlock<string> InputBuffer()
 		{
 			return new BufferBlock<string>(
@@ -120,7 +76,12 @@ namespace Worker.Blocks
 			var bacthSize = apiRequest.GetRequestBatchSize(collectTask.Method);
 
 			return
-				new BatchBlock<T>(bacthSize, new GroupingDataflowBlockOptions() { BoundedCapacity = 1000 });
+				new BatchBlock<T>(bacthSize, 
+					new GroupingDataflowBlockOptions() 
+					{ 
+						BoundedCapacity = 1000 
+					}
+				);
 		}
 
 		public TransformBlock<string[], object> Process()
@@ -131,8 +92,6 @@ namespace Worker.Blocks
 			var method = collectTask.Method;
 			return new TransformBlock<string[], object>(async ids =>
 				{
-					collectTask.CounterItems += ids.Length;
-
 					var requestType = apiRequest.GetRequestType(method);
 
 					object result = null;
@@ -183,7 +142,6 @@ namespace Worker.Blocks
 
 		public ActionBlock<object> WriteResults(IRepository Repo)
 		{
-			var i = 0;
 			return
 				new ActionBlock<object>(o =>
 					{
@@ -193,13 +151,12 @@ namespace Worker.Blocks
 							{
 								Repo.WriteResult(o);
 
-								//if (collectTask.CounterItems % 1024 == 0)
-								//{
-								//	Trace.TraceEvent(TraceEventType.Information, collectTask.Method.GetHashCode(), "Start process " + collectTask.CounterItems + "/" + collectTask.AllItems);
-								//	Trace.Flush();
-								//}
-
-								Console.WriteLine("Sended: " + collectTask.AllItems + " Handled: " + i++);
+								collectTask.CounterItems += Helpers.GetItemCount(o);
+								if (collectTask.CounterItems % 1024 == 0)
+								{
+									Trace.TraceEvent(TraceEventType.Information, collectTask.Method.GetHashCode(), "Processed " + collectTask.CounterItems + "/" + collectTask.AllItems);
+									Trace.Flush();
+								}
 
 							}
 							catch (Exception ex)

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Worker.Common;
 using Worker.Model;
@@ -19,42 +20,28 @@ namespace Worker.Service
 		DataCollector dataCollector;
 
 		List<CollectTask> tasks;
+		int currentId;
+
 
 		public UniSocialService(DataCollector Collector)
 		{
 			tasks = new List<CollectTask>();
-
+			currentId = 0;
 			dataCollector = Collector;
 		}
 
 
 		#region Service
-		public void StartNewTask(CollectTask CollectTask)
+		public void StartNewTask(CollectTask collectTask)
 		{
-			tasks.Add(CollectTask);
+			collectTask.CollectTaskId = currentId;
+			currentId++;
 
-			Trace.TraceEvent(TraceEventType.Start, CollectTask.GetHashCode(), CollectTask.ToString());
+			tasks.Add(collectTask);
 
-			Task.Factory.StartNew(() => {
+			Trace.TraceEvent(TraceEventType.Start, collectTask.GetHashCode(), collectTask.ToString());
 
-				var task = dataCollector.Collect(CollectTask);
-
-				task.ContinueWith(
-					t =>
-					{
-						if (t.IsFaulted)
-						{
-							Trace.TraceEvent(TraceEventType.Error, CollectTask.GetHashCode(), t.Exception.Message);
-							CollectTask.ErrorMessage = t.Exception.Message;
-						}
-
-						CollectTask.IsCompleted = true;
-						//tasks.Remove(CollectTask);
-						Trace.TraceEvent(TraceEventType.Stop, CollectTask.GetHashCode(), CollectTask.ToString());
-					}
-				);			
-
-			});
+			Task.Factory.StartNew(startTask, collectTask);
 		}
 
 		public List<CollectTask> GetTasks()
@@ -62,16 +49,46 @@ namespace Worker.Service
 			return tasks;
 		}
 
-		public void RemoveTaskFromList(CollectTask CollectTask)
+		public void RemoveTaskFromList(int CollectTaskId)
 		{
-			tasks.Remove(CollectTask);
+			var t = tasks.Where(c => c.CollectTaskId == CollectTaskId).FirstOrDefault();
+
+			if (t != null)
+				tasks.Remove(t);
 		}
 
+		public void CancelTask(int CollectTaskId)
+		{
+			var t = tasks.Where(c => c.CollectTaskId == CollectTaskId).FirstOrDefault();
+
+			if (t != null)
+			{
+				if(!t.CancellationSource.IsCancellationRequested)
+					t.CancellationSource.Cancel();
+			}
+		}
 	
 		#endregion
 
+		void startTask(object collectTask)
+		{
+			var ct = collectTask as CollectTask;
+			ct.CancellationSource = new CancellationTokenSource();
+			
+			var task = dataCollector.Collect(ct);
 
+			task.ContinueWith(t =>
+			{
+				if (t.IsFaulted)
+				{
+					Trace.TraceEvent(TraceEventType.Error, collectTask.GetHashCode(), t.Exception.Message);
+					ct.ErrorMessage = t.Exception.Message;
+				}
 
+				ct.IsCompleted = true;
+				Trace.TraceEvent(TraceEventType.Stop, collectTask.GetHashCode(), collectTask.ToString());
+			});			
+ 		}
 
 	}
 }

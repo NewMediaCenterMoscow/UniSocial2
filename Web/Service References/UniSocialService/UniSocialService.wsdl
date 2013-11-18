@@ -19,6 +19,9 @@
   <wsdl:message name="IUniSocial_RemoveTaskFromList_InputMessage">
     <wsdl:part name="parameters" element="tns:RemoveTaskFromList" />
   </wsdl:message>
+  <wsdl:message name="IUniSocial_CancelTask_InputMessage">
+    <wsdl:part name="parameters" element="tns:CancelTask" />
+  </wsdl:message>
   <wsdl:portType name="IUniSocial">
     <wsdl:operation name="StartNewTask">
       <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/StartNewTask" message="tns:IUniSocial_StartNewTask_InputMessage" />
@@ -29,6 +32,9 @@
     </wsdl:operation>
     <wsdl:operation name="RemoveTaskFromList">
       <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/RemoveTaskFromList" message="tns:IUniSocial_RemoveTaskFromList_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelTask">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUniSocial/CancelTask" message="tns:IUniSocial_CancelTask_InputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IUniSocial" type="tns:IUniSocial">
@@ -50,6 +56,12 @@
     </wsdl:operation>
     <wsdl:operation name="RemoveTaskFromList">
       <soap:operation soapAction="http://tempuri.org/IUniSocial/RemoveTaskFromList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="CancelTask">
+      <soap:operation soapAction="http://tempuri.org/IUniSocial/CancelTask" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

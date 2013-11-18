@@ -36,8 +36,6 @@ namespace Worker.Repository
 			}
 
 			stream.Dispose();
-
-			Thread.Sleep(500);
 		}
 
 		public IEnumerable<string> GetInputData()

@@ -34,5 +34,19 @@ namespace Worker.Common
 			return Obj is List<object>;
 		}
 
+
+		public static long GetItemCount(object Obj)
+		{
+			if (IsList(Obj))
+			{
+				var listObjs = Obj as List<object>;
+
+				return listObjs.Count;
+			}
+			else
+			{
+				return 1;
+			}
+		}
 	}
 }

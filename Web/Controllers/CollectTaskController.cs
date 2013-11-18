@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Web.Infrastructure;
 using Web.Models;
 using Web.UniSocialService;
 
@@ -24,24 +23,9 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var inputFilename = collectForm.InputFile;
+				var ct = createTask(collectForm);
 
-				CollectTask ct = new CollectTask() { SocialNetwork = collectForm.Network, Method = collectForm.Method };
-				ct.Input = new CollectTaskIOFile() { Filename = inputFilename };
-
-				if (collectForm.OutputInDb)
-				{
-					string connStr = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString;
-					ct.Output = new CollectTaskIODatabase() { ConnectionString = connStr };
-				}
-				else
-				{
-					var outputFilename = collectForm.OutputFilename;
-					ct.Output = new CollectTaskIOFile() { Filename = outputFilename };
-				}
-
-
-				wkComm.SendTaskToQueue(ct);
+				uniSocialClient.StartNewTask(ct);
 
 				return RedirectToAction("CollectStarted");
 			}
@@ -51,12 +35,44 @@ namespace Web.Controllers
 			}
 		}
 
-		
 		public ActionResult CollectStarted()
 		{
 			return View();
 		}
 
+		public ActionResult Cancel(int id)
+		{
+			uniSocialClient.CancelTask(id);
 
+			return RedirectToAction("Index", "Home");
+		}
+
+		public ActionResult RemoveFromList(int id)
+		{
+			uniSocialClient.RemoveTaskFromList(id);
+
+			return RedirectToAction("Index", "Home");
+		}
+
+		CollectTask createTask(CollectForm collectForm)
+		{
+			var inputFilename = collectForm.InputFile;
+
+			CollectTask ct = new CollectTask() { SocialNetwork = collectForm.Network, Method = collectForm.Method };
+			ct.Input = new CollectTaskIOFile() { Filename = inputFilename };
+
+			if (collectForm.OutputInDb)
+			{
+				string connStr = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString;
+				ct.Output = new CollectTaskIODatabase() { ConnectionString = connStr };
+			}
+			else
+			{
+				var outputFilename = collectForm.OutputFilename;
+				ct.Output = new CollectTaskIOFile() { Filename = outputFilename };
+			}
+
+			return ct;
+		}
 	}
 }
