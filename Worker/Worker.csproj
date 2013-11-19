@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9BCD8C4F-084D-46DD-8BE5-68C3622EB9A9}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Worker</RootNamespace>
     <AssemblyName>Worker</AssemblyName>
@@ -48,6 +48,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security">
@@ -100,12 +103,8 @@
     <Compile Include="Model\CollectTask.cs" />
     <Compile Include="Model\CollectTaskIO.cs" />
     <Compile Include="Model\CollectTaskIOFile.cs" />
-    <Compile Include="NinjectModules\Worker.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Service\IUniSocial.cs" />
-    <Compile Include="Service\UniSocialService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

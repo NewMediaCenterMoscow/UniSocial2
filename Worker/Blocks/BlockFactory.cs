@@ -42,8 +42,7 @@ namespace Worker.Blocks
 			ninjectKernels.Add(
 				"vkontakte", 
 				new StandardKernel(
-					new NinjectModules.Vk(),
-					new NinjectModules.Worker()
+					new NinjectModules.Vk()
 				)
 			);
 		}

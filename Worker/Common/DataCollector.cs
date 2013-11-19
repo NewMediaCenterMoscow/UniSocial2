@@ -15,10 +15,9 @@ using Worker.Repository;
 
 namespace Worker.Common
 {
-	class DataCollector
+	public class DataCollector
 	{
-		[Inject]
-		public TraceSource Trace { get; set; }
+		public static TraceSource Trace { get; set; }
 
 		public DataCollector()
 		{
@@ -29,8 +28,8 @@ namespace Worker.Common
 		{
 			var blockFactory = new BlockFactory(collectTask);
 			var blockController = new BlockController();
-			blockController.Trace = this.Trace;
-			blockFactory.Trace = this.Trace;
+			blockController.Trace = DataCollector.Trace;
+			blockFactory.Trace = DataCollector.Trace;
 
 			// Create repo for write results
 			var inputRepo = getRepository(collectTask.Input);

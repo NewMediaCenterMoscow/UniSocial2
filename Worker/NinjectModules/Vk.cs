@@ -3,9 +3,11 @@ using Collector.Interface;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Worker.Common;
 
 namespace Worker.NinjectModules
 {
@@ -16,6 +18,8 @@ namespace Worker.NinjectModules
 			Bind<IApi>().To<VkApi>();
 			Bind<IApiRequest>().To<VkApiRequest>();
 			Bind<IDataExtractor>().To<VkDataExtractor>();
+
+			Bind<TraceSource>().ToConstant(DataCollector.Trace);
 		}
 	}
 }

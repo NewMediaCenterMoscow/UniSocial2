@@ -1,8 +1,8 @@
-﻿using Ninject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Worker.Common;
 using Worker.Model;
 
-namespace Worker.Service
+namespace Service
 {
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	class UniSocialService : IUniSocial
@@ -22,14 +22,16 @@ namespace Worker.Service
 		List<CollectTask> tasks;
 		int currentId;
 
-
-		public UniSocialService(DataCollector Collector)
+		public UniSocialService()
 		{
 			tasks = new List<CollectTask>();
 			currentId = 0;
-			dataCollector = Collector;
-		}
 
+			this.Trace = new TraceSource("primes");
+
+			dataCollector = new DataCollector();
+			DataCollector.Trace = this.Trace;
+		}
 
 		#region Service
 		public void StartNewTask(CollectTask collectTask)
@@ -63,18 +65,18 @@ namespace Worker.Service
 
 			if (t != null)
 			{
-				if(!t.CancellationSource.IsCancellationRequested)
+				if (!t.CancellationSource.IsCancellationRequested)
 					t.CancellationSource.Cancel();
 			}
 		}
-	
+
 		#endregion
 
 		void startTask(object collectTask)
 		{
 			var ct = collectTask as CollectTask;
 			ct.CancellationSource = new CancellationTokenSource();
-			
+
 			var task = dataCollector.Collect(ct);
 
 			task.ContinueWith(t =>
@@ -87,8 +89,8 @@ namespace Worker.Service
 
 				ct.IsCompleted = true;
 				Trace.TraceEvent(TraceEventType.Stop, collectTask.GetHashCode(), collectTask.ToString());
-			});			
- 		}
+			});
+		}
 
 	}
 }

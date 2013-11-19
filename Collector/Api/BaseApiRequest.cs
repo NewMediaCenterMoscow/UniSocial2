@@ -64,8 +64,8 @@ namespace Collector.Api
 		protected Dictionary<string, ApiRequestType> requestTypes;
 
 
-		[Inject]
-		public TraceSource Trace { get; set; }
+		//[Inject]
+		//public TraceSource Trace { get; set; }
 
 		public BaseApiRequest(IApi Api, IDataExtractor DataExtractor)
 		{

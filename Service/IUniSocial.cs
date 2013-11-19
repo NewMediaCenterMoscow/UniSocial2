@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Security;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
-using System.Threading.Tasks;
 using Worker.Model;
 
-namespace Worker.Service
+namespace Service
 {
 	[ServiceContract]
 	public interface IUniSocial
 	{
-		[OperationContract(IsOneWay=true)]
+		[OperationContract(IsOneWay = true)]
 		void StartNewTask(CollectTask CollectTask);
 
 		[OperationContract]
