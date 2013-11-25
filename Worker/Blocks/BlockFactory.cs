@@ -112,10 +112,12 @@ namespace Worker.Blocks
 					}
 					catch (ApiException ex)
 					{
+						collectTask.CounterItems += ids.Length;
 						//Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ex.Message);
 					}
 					catch (Exception ex)
 					{
+						collectTask.CounterItems += ids.Length;
 						Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ">>>" + ex.Message);
 					}
 
