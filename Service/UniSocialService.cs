@@ -89,6 +89,8 @@ namespace Service
 
 				ct.IsCompleted = true;
 				Trace.TraceEvent(TraceEventType.Stop, collectTask.GetHashCode(), collectTask.ToString());
+
+				Trace.Flush();
 			});
 		}
 
