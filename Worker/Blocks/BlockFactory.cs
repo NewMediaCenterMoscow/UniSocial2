@@ -107,7 +107,7 @@ namespace Worker.Blocks
 						}
 						if (requestType == ApiRequestType.ListForObject)
 						{
-							result = await apiRequest.ExecuteRequest(method, ids[0], 0, apiRequest.GetRequestItemsMaxCount(collectTask.Method));
+							result = await apiRequest.ExecuteRequest(method, ids[0], 0, Int32.MaxValue);
 						}
 					}
 					catch (ApiException ex)

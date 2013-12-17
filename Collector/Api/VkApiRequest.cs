@@ -47,7 +47,7 @@ namespace Collector.Api
 				{ "filter", "all" } 
 			});
 
-			itemsMaxCounts.Add("groups.getMembers", 10);
+			itemsMaxCounts.Add("groups.getMembers", 1000);
 			itemsMaxCounts.Add("groups.get", 1000);
 			itemsMaxCounts.Add("wall.get", 100);
 			itemsMaxCounts.Add("wall.getReposts", 1000);

@@ -186,14 +186,14 @@ namespace Collector.Api
 			List<object> resultList = new List<object>();
 			List<object> result;
 
-			var maxLimit = 2000;
+			var maxLimit = GetRequestItemsMaxCount(Method);
 			var currentOffset = Offset;
-			var currentCount = Count;
+			var currentCount = 0;
 
 			while(true)
 			{
 				setIdParams(param, Id);
-				setListParams(param, currentOffset, currentCount);
+				setListParams(param, currentOffset, maxLimit);
 
 				result = await executeRequest(param) as List<object>;
 
@@ -201,7 +201,9 @@ namespace Collector.Api
 				{
 					resultList.AddRange(result);
 
-					if (currentOffset > maxLimit || result.Count < currentCount)
+					currentCount = result.Count;
+
+					if (currentCount < maxLimit || result.Count >= Count)
 					{
 						break;
 					}
