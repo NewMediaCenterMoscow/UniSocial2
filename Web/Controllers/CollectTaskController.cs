@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
-using Web.UniSocialService;
+using Worker.Model;
 
 namespace Web.Controllers
 {
