@@ -102,7 +102,7 @@ namespace Worker.Common
 			s.Write("\""); s.Write(obj.Id); s.Write("\",");
 			s.Write("\""); s.Write(obj.FromId); s.Write("\",");
 			s.Write("\""); s.Write(obj.ToId); s.Write("\",");
-			s.Write("\""); s.Write(obj.Date); s.Write("\",");
+			s.Write("\""); s.Write(obj.Date.ToString("o")); s.Write("\",");
 			s.Write("\""); s.Write(obj.PostType.ToString()); s.Write("\",");
 			s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
 			s.Write("\""); s.Write(obj.Comments != null ? obj.Comments.Count : 0); s.Write("\",");
@@ -179,7 +179,7 @@ namespace Worker.Common
 				s.Write(grp); s.Write(","); s.Write(obj.Id); s.Write("\n");
 			}
 		}
-		private void formatVkGroupMembers(object o, StreamWriter s)
+		private static void formatVkGroupMembers(object o, StreamWriter s)
 		{
 			var obj = o as VkGroupMembers;
 
@@ -188,7 +188,7 @@ namespace Worker.Common
 				s.Write(obj.GroupId); s.Write(","); s.Write(memberId); s.Write("\n");
 			}
 		}
-		private void formatVkFriends(object o, StreamWriter s)
+		private static void formatVkFriends(object o, StreamWriter s)
 		{
 			var obj = o as VkFriends;
 
@@ -197,7 +197,7 @@ namespace Worker.Common
 				s.Write(obj.UserId); s.Write(","); s.Write(friendId); s.Write("\n");
 			}
 		}
-		private void formatVkUserGroups(object o, StreamWriter s)
+		private static void formatVkUserGroups(object o, StreamWriter s)
 		{
 			var obj = o as VkUserGroups;
 
