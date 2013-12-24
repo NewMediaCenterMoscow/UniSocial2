@@ -11,7 +11,7 @@ namespace Web.Controllers
 	{
 		protected UniSocialServiceClient uniSocialClient;
 
-		UniSocialBaseController()
+		public UniSocialBaseController()
 		{
 			uniSocialClient = new UniSocialServiceClient();
 		}
