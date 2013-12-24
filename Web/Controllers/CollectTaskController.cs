@@ -56,7 +56,7 @@ namespace Web.Controllers
 
 		CollectTask createTask(CollectForm collectForm)
 		{
-			var inputFilename = collectForm.InputFile;
+			var inputFilename = collectForm.InputFile.Trim('"','\'');
 
 			CollectTask ct = new CollectTask() { SocialNetwork = collectForm.Network, Method = collectForm.Method };
 			ct.Input = new CollectTaskIOFile() { Filename = inputFilename };
@@ -68,7 +68,7 @@ namespace Web.Controllers
 			}
 			else
 			{
-				var outputFilename = collectForm.OutputFilename;
+				var outputFilename = collectForm.OutputFilename.Trim('"', '\'');
 				ct.Output = new CollectTaskIOFile() { Filename = outputFilename };
 			}
 

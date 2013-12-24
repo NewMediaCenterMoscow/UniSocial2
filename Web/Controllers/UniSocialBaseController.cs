@@ -9,9 +9,9 @@ namespace Web.Controllers
 {
 	public class UniSocialBaseController : Controller
 	{
-		internal static UniSocialServiceClient uniSocialClient;
+		protected UniSocialServiceClient uniSocialClient;
 
-		static UniSocialBaseController()
+		UniSocialBaseController()
 		{
 			uniSocialClient = new UniSocialServiceClient();
 		}
