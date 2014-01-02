@@ -13,7 +13,6 @@ namespace ConsoleService
 	class Program
 	{
 		public static TraceSource Trace = new TraceSource("primes");
-		static Uri baseAddress = new Uri("http://127.0.0.1:9000/Service.UniSocialService.svc");
 
 		static void Main(string[] args)
 		{
@@ -21,7 +20,7 @@ namespace ConsoleService
 
 			if (selfHost != null)
 			{
-				Trace.TraceEvent(TraceEventType.Information, 0, "The service is ready at " + baseAddress);
+				Trace.TraceEvent(TraceEventType.Information, 0, "The service is ready");
 
 				Console.ReadLine();
 				selfHost.Close();
@@ -32,16 +31,10 @@ namespace ConsoleService
 		{
 			var uniSocialServiceClass = new UniSocialService();
 
-			var selfHost = new ServiceHost(uniSocialServiceClass, baseAddress);
+			var selfHost = new ServiceHost(uniSocialServiceClass);
 
 			try
 			{
-				// Enable metadata publishing.
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
-				selfHost.Description.Behaviors.Add(smb);
-
 				selfHost.Open();
 
 				return selfHost;
