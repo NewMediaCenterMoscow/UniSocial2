@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20827.3
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Collector", "Collector\Collector.csproj", "{6AFE7DBE-287D-4FB1-BC01-490739C9EF0D}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{2F78F0DD-B789-4154-BD2C-F281029A4BA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{15B3E0D2-6217-493A-A690-158C497F5318}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleService", "ConsoleService\ConsoleService.csproj", "{D8F741BA-8044-4424-B7D5-6FB13609F068}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F741BA-8044-4424-B7D5-6FB13609F068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F741BA-8044-4424-B7D5-6FB13609F068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F741BA-8044-4424-B7D5-6FB13609F068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F741BA-8044-4424-B7D5-6FB13609F068}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
