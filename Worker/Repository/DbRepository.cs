@@ -61,6 +61,7 @@ namespace Worker.Repository
 			var tableName = getTableNameFromObject(Obj);
 			var query = "COPY " + tableName + " FROM STDIN WITH CSV";
 
+
 			if (writeConn.State != System.Data.ConnectionState.Open)
 				writeConn.Open();
 
@@ -87,7 +88,7 @@ namespace Worker.Repository
 		{
 			if (writeConn != null)
 			{
-				if(writeConn.State != System.Data.ConnectionState.Closed)
+				if (writeConn.State != System.Data.ConnectionState.Closed)
 					writeConn.Close();
 
 				writeConn.Dispose();
