@@ -73,7 +73,8 @@ namespace Worker.Common
 			}
 			if (collectTaskIO is CollectTaskIODatabase)
 			{
-				repo = new DbRepository((collectTaskIO as CollectTaskIODatabase).ConnectionString);
+				//repo = new PgsqlRepository((collectTaskIO as CollectTaskIODatabase).ConnectionString);
+				repo = new MsSqlRepository((collectTaskIO as CollectTaskIODatabase).ConnectionString);
 			}
 
 			return repo;

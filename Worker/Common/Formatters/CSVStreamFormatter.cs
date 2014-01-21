@@ -7,16 +7,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Collector.Common;
 
-namespace Worker.Common
+
+namespace Worker.Common.Formatters
 {
-	class ObjectFormatter
+	public class CSVStreamFormatter : ObjectFormatter
 	{
 		Dictionary<Type, Action<object, StreamWriter>> formatters;
+		Type objectType;
 
-		public ObjectFormatter()
+		MemoryStream resultStream;
+		StreamWriter writer;
+
+		public CSVStreamFormatter()
 		{
-			formatters = new Dictionary<Type,Action<object, StreamWriter>>();
+			formatters = new Dictionary<Type, Action<object, StreamWriter>>();
 			setFormatters();
+
+			resultStream = new MemoryStream();
+			writer = new StreamWriter(resultStream);
 		}
 
 		void setFormatters()
@@ -29,37 +37,8 @@ namespace Worker.Common
 			formatters.Add(typeof(VkFriends), formatVkFriends);
 			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
 		}
-		
-		
-		public Stream ToCSVStream(object Obj)
-		{
-			var resultStream = new MemoryStream();
-			var writer = new StreamWriter(resultStream);
 
-			var type = Helpers.GetObjectType(Obj);
-			var isList = Helpers.IsList(Obj);
-
-			if (type == null)
-				return null;
-
-			if (isList)
-			{
-				var listObjs = Obj as List<object>;
-
-				foreach (var item in listObjs)
-				{
-					formatters[type](item, writer);
-				}
-			}
-			else
-			{
-				formatters[type](Obj, writer);
-			}
-
-			writer.Flush();
-
-			return resultStream;
-		}
+		#region Fromatters	
 
 		private static void formatVkPost(object o, StreamWriter s)
 		{
@@ -205,6 +184,29 @@ namespace Worker.Common
 			{
 				s.Write(obj.UserId); s.Write(","); s.Write(groupId); s.Write("\n");
 			}
+		}
+		#endregion
+
+		protected override void SetObjectType(Type t)
+		{
+			objectType = t;
+		}
+
+		protected override void HandleObject(object Obj)
+		{
+			formatters[objectType](Obj, writer);
+		}
+
+		protected override object GetResult()
+		{
+			writer.Flush();
+			return resultStream;
+		}
+
+		public override void Dispose()
+		{
+			writer.Close();
+			resultStream.Close();
 		}
 	}
 }

@@ -6,24 +6,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Worker.Common;
+using Worker.Common.Formatters;
 using Worker.Repository;
 
 namespace Worker.Repository
 {
 	class FileRepository : IRepository
 	{
-		ObjectFormatter formatter;
+		CSVStreamFormatter formatter;
 		string filename;
 
 		public FileRepository(string Filename)
 		{
 			filename = Filename;
-			formatter = new ObjectFormatter();
+			formatter = new CSVStreamFormatter();
 		}
 
 		public void WriteResult(object Obj)
 		{
-			var stream = formatter.ToCSVStream(Obj);
+			var stream = formatter.FormatObject(Obj) as Stream;
 
 			if (stream == null)
 				return;
@@ -35,7 +36,7 @@ namespace Worker.Repository
 				file.Flush();
 			}
 
-			stream.Dispose();
+			formatter.Dispose();
 		}
 
 		public IEnumerable<string> GetInputData()

@@ -9,34 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Worker.Common;
+using Worker.Common.Formatters;
 
 namespace Worker.Repository
 {
-	class DbRepository : IRepository
+	class PgsqlRepository : DbRepositiry
 	{
-		string connStr;
-		string queryForInputData;
-
-		NpgsqlConnection writeConn;
-
-		ObjectFormatter formatter;
-		Dictionary<Type, string> tableNames;
-
-		public DbRepository(string ConnectionString, string QueryForInputData = "")
+		public PgsqlRepository(string ConnectionString, string QueryForInputData = "")
+			: base(ConnectionString, QueryForInputData)
 		{
-			connStr = ConnectionString;
-			queryForInputData = QueryForInputData;
-
-			tableNames = new Dictionary<Type, string>();
-			setTableNames();
-
-			formatter = new ObjectFormatter();
-
-			writeConn = new NpgsqlConnection(connStr);
-			//factory = DbProviderFactories.GetFactory("Npgsql");
+			writeConn = new NpgsqlConnection(ConnectionString);
+			formatter = new CSVStreamFormatter();
 		}
 
-		public IEnumerable<string> GetInputData()
+		public override IEnumerable<string> GetInputData()
 		{
 			if (queryForInputData == "")
 				yield break;
@@ -51,9 +37,9 @@ namespace Worker.Repository
 				yield return reader.GetString(0);
 		}
 
-		public void WriteResult(object Obj)
+		public override void WriteResult(object Obj)
 		{
-			var dataStream = formatter.ToCSVStream(Obj);
+			var dataStream = formatter.FormatObject(Obj) as Stream;
 
 			if (dataStream == null)
 				return;
@@ -65,8 +51,8 @@ namespace Worker.Repository
 			if (writeConn.State != System.Data.ConnectionState.Open)
 				writeConn.Open();
 
-			var cmd = new NpgsqlCommand(query, writeConn);
-			var cin = new NpgsqlCopyIn(cmd, writeConn);
+			var cmd = new NpgsqlCommand(query, writeConn as NpgsqlConnection);
+			var cin = new NpgsqlCopyIn(cmd, writeConn as NpgsqlConnection);
 
 			try
 			{
@@ -82,30 +68,16 @@ namespace Worker.Repository
 				cin.Cancel("Undo copy");
 				throw;
 			}
-		}
-
-		public void Dispose()
-		{
-			if (writeConn != null)
+			finally 
 			{
-				if (writeConn.State != System.Data.ConnectionState.Closed)
-					writeConn.Close();
-
-				writeConn.Dispose();
+				dataStream.Dispose();
 			}
 		}
 
-		void setTableNames()
+		protected override void setTableNames()
 		{
 			tableNames.Add(typeof(VkPost), "new_post");
 			tableNames.Add(typeof(VkFriends), "new_friends");
-		}
-
-		string getTableNameFromObject(object obj)
-		{
-			var type = Helpers.GetObjectType(obj);
-
-			return tableNames[type];
 		}
 	}
 }

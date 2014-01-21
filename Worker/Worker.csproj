@@ -96,9 +96,14 @@
     <Compile Include="Blocks\BlockController.cs" />
     <Compile Include="Blocks\BlockFactory.cs" />
     <Compile Include="Common\DataCollector.cs" />
+    <Compile Include="Common\Formatters\CSVStreamFormatter.cs" />
+    <Compile Include="Common\Formatters\DataReaderFormatter.cs" />
+    <Compile Include="Common\Formatters\IFormatter.cs" />
     <Compile Include="Common\Helpers.cs" />
-    <Compile Include="Common\ObjectFormatter.cs" />
-    <Compile Include="Repository\DbRepository.cs" />
+    <Compile Include="Common\Formatters\ObjectFormatter.cs" />
+    <Compile Include="Repository\DbRepositiry.cs" />
+    <Compile Include="Repository\MsSqlRepository.cs" />
+    <Compile Include="Repository\PgsqlRepository.cs" />
     <Compile Include="Repository\FileRepository.cs" />
     <Compile Include="Model\CollectTaskIODatabase.cs" />
     <Compile Include="NinjectModules\Vk.cs" />

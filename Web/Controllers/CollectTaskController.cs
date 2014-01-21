@@ -63,7 +63,8 @@ namespace Web.Controllers
 
 			if (collectForm.OutputInDb)
 			{
-				string connStr = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString;
+				//string connStr = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString;
+				string connStr = ConfigurationManager.ConnectionStrings["sqlserver"].ConnectionString;
 				ct.Output = new CollectTaskIODatabase() { ConnectionString = connStr };
 			}
 			else
