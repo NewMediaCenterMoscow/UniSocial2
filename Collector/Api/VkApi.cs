@@ -77,36 +77,19 @@ namespace Collector.Api
 
 		public override async Task<JObject> ExecuteRequest(string Method, Dictionary<string, string> Params)
 		{
-			JObject result = null;
+			JObject result =  await base.ExecuteRequest(Method, Params);
 
-			try
-			{
-				result = await base.ExecuteRequest(Method, Params);
-			}
-			catch (TaskCanceledException)
-			{
-				Trace.TraceEvent(TraceEventType.Warning, this.GetHashCode(), "Task cancelation");
-				result = null;
-				Thread.Sleep(60000);
-			}
+            if (result != null && result["error"] != null)
+            {
+                var errorCode = (int)result["error"]["error_code"];
+                var errorMessage = (string)result["error"]["error_msg"];
 
-			if (result != null && result["error"] != null)
-			{
-				var errorCode = (int)result["error"]["error_code"];
-				if (errorCode == 6)
-				{
-					Trace.TraceEvent(TraceEventType.Warning, this.GetHashCode(), "Too many request");
-					result = null;
-					Thread.Sleep(2000);
-				}
-				else
-					throw new ApiException((string)result["error"]["error_msg"], errorCode);
-			}
-
-			if (result == null)
-			{
-				return await ExecuteRequest(Method, Params);
-			}
+                throw new ApiException(errorMessage, errorCode);
+            }
+            else if(result == null)
+            {
+                throw new ApiException("Cannot get data from server",0);
+            }
 
 			if (isMethodNeedAuth(Method))
 				Thread.Sleep(300);

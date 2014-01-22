@@ -52,6 +52,9 @@ namespace Worker.Common
 				await inputBufferBlock.SendAsync(item);
 				collectTask.AllItems++;
 
+                if (collectTask.AllItems % 524288 == 0)
+                    Thread.Sleep(TimeSpan.FromMinutes(15));
+
 				if (collectTask.CancellationSource.IsCancellationRequested)
 					break;
 			}

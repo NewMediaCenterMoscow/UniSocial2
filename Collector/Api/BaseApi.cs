@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Collector.Api
@@ -50,15 +51,40 @@ namespace Collector.Api
 		public virtual async Task<JObject> ExecuteRequest(string Method, Dictionary<string, string> Params)
 		{
 			var requestUri = formatUri(Method, Params);
+            string data = null;
 
-			var data = await client.GetStringAsync(requestUri.ToString());
-			var result = JObject.Parse(data);
+            var repeats = 3;
+            var repeatInterval = 60000;
 
-			//Trace.TraceInformation("Request success: " + Method);
-			//Trace.TraceEvent(TraceEventType.Information, requestNumber++, "Request success: " + Method);
+            while (repeats > 0)
+            {
+                try
+                {
+                    data = await client.GetStringAsync(requestUri.ToString());
+                }
+                catch (HttpRequestException)
+                {
+                    Thread.Sleep((int)(repeatInterval * 1.0 / repeats));
+                    Trace.TraceInformation(">>>>Sleeping " + (int)(repeatInterval * 1.0 / repeats) + "....");
+                }
+                catch (TaskCanceledException)
+                {
+                    Thread.Sleep((int)(repeatInterval * 1.0 / repeats));
+                    Trace.TraceInformation(">>>>Task cancelation " + (int)(repeatInterval * 1.0 / repeats) + "....");
+                }
 
-			return result;
-		}
+                repeats--;
+
+                Console.WriteLine(requestUri);
+
+                if (data != null)
+                {
+                    return JObject.Parse(data);
+                }
+            }
+
+            return null;
+        }
 
 
 	}
