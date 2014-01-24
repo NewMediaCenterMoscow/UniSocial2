@@ -160,6 +160,7 @@
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\nmc-us-test.pubxml" />
     <None Include="Properties\PublishProfiles\vm-windows unisocial.pubxml" />
+    <None Include="Properties\PublishProfiles\vm-windows-server.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

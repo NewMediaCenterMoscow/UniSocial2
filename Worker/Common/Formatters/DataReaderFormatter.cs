@@ -10,22 +10,32 @@ namespace Worker.Common.Formatters
 {
 	public class DataReaderFormatter : ObjectFormatter
 	{
-		public class VKPostDataReader : IDataReader
+		public class UniSocialObjectsDataReader : IDataReader
 		{
-			public List<VkPost> posts = new List<VkPost>();
+			protected List<object> items = new List<object>();
+			protected int currentIndex = -1;
 
-			int currentIndex = -1;
+			protected int fieldCount;
+			protected Func<object, int, object> getValue;
 
-			public int FieldCount
+			public UniSocialObjectsDataReader(int FieldCount, Func<object, int, object> GetValue)
 			{
-				get { return 13; }
+				fieldCount = FieldCount;
+				getValue = GetValue;
 			}
+
+			public virtual void AddItem(object NewItem)
+			{
+				items.Add(NewItem);
+			}
+
+			#region IDataReader members
 
 			public bool Read()
 			{
 				currentIndex++;
 
-				if (currentIndex == posts.Count)
+				if (currentIndex == items.Count)
 				{
 					return false;
 				}
@@ -35,32 +45,25 @@ namespace Worker.Common.Formatters
 				}
 			}
 
+			public int FieldCount
+			{
+				get { return fieldCount; }
+			}
+
 			public object GetValue(int i)
 			{
-				var p = posts[currentIndex];
-				var copyHistory = p.CopyHistory == null ? null : p.CopyHistory.FirstOrDefault();
+				var obj = items[currentIndex];
+				var value = getValue(obj,i);
 
-				if (i == 0) return p.Id;
-				if (i == 1) return p.FromId;
-				if (i == 2) return p.ToId;
-				if (i == 3) return p.Date;
-				if (i == 4) return p.PostType;
-				if (i == 5) return p.Text;
-				if (i == 6) return p.Comments.Count;
-				if (i == 7) return p.Likes.Count;
-				if (i == 8) return p.Reposts.Count;
-				if (i == 9) return copyHistory == null ? 0 : copyHistory.Id;
-				if (i == 10) return copyHistory == null ? 0 : copyHistory.FromId;
-				if (i == 11) return copyHistory == null ? 0 : copyHistory.ToId;
-				if (i == 12) return copyHistory == null ? "" : copyHistory.Text;
-
-				return "";
+				return value;
 			}
 
 			public void Dispose()
 			{
 
 			}
+
+			#endregion
 
 			#region IDataReader unnecessary members
 
@@ -208,26 +211,80 @@ namespace Worker.Common.Formatters
 			{
 				get { throw new NotImplementedException(); }
 			}
-	#endregion
+			#endregion
 
 		}
 
+		public class UniSocialVkFriendDataReader : UniSocialObjectsDataReader
+		{
+			public UniSocialVkFriendDataReader(int FieldCount, Func<object, int, object> GetValue)
+				: base(FieldCount, GetValue)
+			{
+				
+			}
 
-		VKPostDataReader dataReader = new VKPostDataReader();
+			public override void AddItem(object NewItem)
+			{
+				var uf = NewItem as VkFriends;
+				foreach (var f in uf.Friends)
+					base.AddItem(new Tuple<long, long>(uf.UserId, f));
+			}
+		}
+
+		Dictionary<Type, UniSocialObjectsDataReader> dataReaders;
+		UniSocialObjectsDataReader currentDataReader;
+
+		public DataReaderFormatter()
+		{
+			dataReaders = new Dictionary<Type, UniSocialObjectsDataReader>();
+			setReaders();
+		}
+
+		private void setReaders()
+		{
+			dataReaders.Add(typeof(VkPost), new UniSocialObjectsDataReader(13, (o,i) => {
+				var p = o as VkPost;
+				var copyHistory = p.CopyHistory == null ? null : p.CopyHistory.FirstOrDefault();
+
+				if (i == 0) return p.Id;
+				if (i == 1) return p.FromId;
+				if (i == 2) return p.ToId;
+				if (i == 3) return p.Date;
+				if (i == 4) return p.PostType;
+				if (i == 5) return p.Text;
+				if (i == 6) return p.Comments.Count;
+				if (i == 7) return p.Likes.Count;
+				if (i == 8) return p.Reposts.Count;
+				if (i == 9) return copyHistory == null ? 0 : copyHistory.Id;
+				if (i == 10) return copyHistory == null ? 0 : copyHistory.FromId;
+				if (i == 11) return copyHistory == null ? 0 : copyHistory.ToId;
+				if (i == 12) return copyHistory == null ? "" : copyHistory.Text;
+				return "";
+
+			}));
+			dataReaders.Add(typeof(VkFriends), new UniSocialVkFriendDataReader(2, (o, i) =>
+			{
+				var p = o as Tuple<long,long>;
+
+				if (i == 0) return p.Item1;
+				if (i == 1) return p.Item2;
+				return "";
+			}));
+		}
 
 		protected override void SetObjectType(Type t)
 		{
-			
+			currentDataReader = dataReaders[t];
 		}
 
 		protected override void HandleObject(object Obj)
 		{
-			dataReader.posts.Add(Obj as VkPost);
+			currentDataReader.AddItem(Obj);
 		}
 
 		protected override object GetResult()
 		{
-			return dataReader;
+			return currentDataReader;
 		}
 
 		public override void Dispose()

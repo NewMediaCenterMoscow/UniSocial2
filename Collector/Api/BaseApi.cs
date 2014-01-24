@@ -53,7 +53,7 @@ namespace Collector.Api
 			var requestUri = formatUri(Method, Params);
             string data = null;
 
-            var repeats = 3;
+            var repeats = 10;
             var repeatInterval = 60000;
 
             while (repeats > 0)

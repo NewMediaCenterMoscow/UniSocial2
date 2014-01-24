@@ -56,8 +56,9 @@ namespace Worker.Repository
 
 		protected override void setTableNames()
 		{
-			tableNames.Add(typeof(VkPost), "posts");
-			tableNames.Add(typeof(VkFriends), "friends");
+			tableNames.Add(typeof(VkPost),		"posts");
+			tableNames.Add(typeof(VkFriends),	"friends");
+			tableNames.Add(typeof(VkUser),		"users");
 		}
 	}
 }

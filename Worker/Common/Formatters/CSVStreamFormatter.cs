@@ -13,7 +13,7 @@ namespace Worker.Common.Formatters
 	public class CSVStreamFormatter : ObjectFormatter
 	{
 		Dictionary<Type, Action<object, StreamWriter>> formatters;
-		Type objectType;
+		Action<object, StreamWriter> currentFormatter;
 
 		MemoryStream resultStream;
 		StreamWriter writer;
@@ -189,12 +189,12 @@ namespace Worker.Common.Formatters
 
 		protected override void SetObjectType(Type t)
 		{
-			objectType = t;
+			currentFormatter = formatters[t];
 		}
 
 		protected override void HandleObject(object Obj)
 		{
-			formatters[objectType](Obj, writer);
+			currentFormatter(Obj, writer);
 		}
 
 		protected override object GetResult()
