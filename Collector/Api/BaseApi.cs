@@ -65,17 +65,15 @@ namespace Collector.Api
                 catch (HttpRequestException)
                 {
                     Thread.Sleep((int)(repeatInterval * 1.0 / repeats));
-                    Trace.TraceInformation(">>>>Sleeping " + (int)(repeatInterval * 1.0 / repeats) + "....");
+                    Trace.TraceInformation("Sleeping " + (int)(repeatInterval * 1.0 / repeats) + "....");
                 }
                 catch (TaskCanceledException)
                 {
                     Thread.Sleep((int)(repeatInterval * 1.0 / repeats));
-                    Trace.TraceInformation(">>>>Task cancelation " + (int)(repeatInterval * 1.0 / repeats) + "....");
+                    Trace.TraceInformation("Task cancelation " + (int)(repeatInterval * 1.0 / repeats) + "....");
                 }
 
                 repeats--;
-
-                Console.WriteLine(requestUri);
 
                 if (data != null)
                 {

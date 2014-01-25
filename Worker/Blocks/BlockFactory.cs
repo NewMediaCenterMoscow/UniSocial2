@@ -118,7 +118,7 @@ namespace Worker.Blocks
 					catch (Exception ex)
 					{
 						collectTask.CounterItems += ids.Length;
-						Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ">>>" + ex.Message);
+						Trace.TraceEvent(TraceEventType.Error, method.GetHashCode(), ids[0] + ex.Message);
 					}
 
 					return result;
