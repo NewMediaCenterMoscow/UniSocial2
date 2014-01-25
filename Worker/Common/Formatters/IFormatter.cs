@@ -12,6 +12,8 @@ namespace Worker.Common.Formatters
 		//void HandleObject(object Obj);
 		//object GetResult();
 
+		//void Initialize();
+
 		object FormatObject(object Obj);
 	}
 }

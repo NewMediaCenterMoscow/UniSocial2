@@ -12,23 +12,16 @@ namespace Worker.Common.Formatters
 {
 	public class CSVStreamFormatter : ObjectFormatter
 	{
-		Dictionary<Type, Action<object, StreamWriter>> formatters;
+		static Dictionary<Type, Action<object, StreamWriter>> formatters;
 		Action<object, StreamWriter> currentFormatter;
 
 		MemoryStream resultStream;
 		StreamWriter writer;
 
-		public CSVStreamFormatter()
+		static CSVStreamFormatter()
 		{
 			formatters = new Dictionary<Type, Action<object, StreamWriter>>();
-			setFormatters();
 
-			resultStream = new MemoryStream();
-			writer = new StreamWriter(resultStream);
-		}
-
-		void setFormatters()
-		{
 			formatters.Add(typeof(VkUser), formatVkUser);
 			formatters.Add(typeof(VkGroup), formatVkGroup);
 			formatters.Add(typeof(VkPost), formatVkPostWithCounts);
@@ -38,7 +31,7 @@ namespace Worker.Common.Formatters
 			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
 		}
 
-		#region Fromatters	
+		#region Fromatters
 
 		private static void formatVkPost(object o, StreamWriter s)
 		{
@@ -186,6 +179,12 @@ namespace Worker.Common.Formatters
 			}
 		}
 		#endregion
+
+		public CSVStreamFormatter()
+		{
+			resultStream = new MemoryStream();
+			writer = new StreamWriter(resultStream);
+		}
 
 		protected override void SetObjectType(Type t)
 		{

@@ -60,7 +60,7 @@ namespace Worker.Common.Formatters
 
 			public void Dispose()
 			{
-
+				
 			}
 
 			#endregion
@@ -231,18 +231,16 @@ namespace Worker.Common.Formatters
 			}
 		}
 
-		Dictionary<Type, UniSocialObjectsDataReader> dataReaders;
 		UniSocialObjectsDataReader currentDataReader;
 
 		public DataReaderFormatter()
 		{
-			dataReaders = new Dictionary<Type, UniSocialObjectsDataReader>();
-			setReaders();
 		}
 
-		private void setReaders()
+		private UniSocialObjectsDataReader createReader(Type t)
 		{
-			dataReaders.Add(typeof(VkPost), new UniSocialObjectsDataReader(13, (o,i) => {
+			if (t == typeof(VkPost))
+				return new UniSocialObjectsDataReader(13, (o,i) => {
 				var p = o as VkPost;
 				var copyHistory = p.CopyHistory == null ? null : p.CopyHistory.FirstOrDefault();
 
@@ -261,20 +259,23 @@ namespace Worker.Common.Formatters
 				if (i == 12) return copyHistory == null ? "" : copyHistory.Text;
 				return "";
 
-			}));
-			dataReaders.Add(typeof(VkFriends), new UniSocialVkFriendDataReader(2, (o, i) =>
-			{
-				var p = o as Tuple<long,long>;
+			});
+			if (t == typeof(VkFriends))
+				return new UniSocialVkFriendDataReader(2, (o, i) =>
+				{
+					var p = o as Tuple<long, long>;
 
-				if (i == 0) return p.Item1;
-				if (i == 1) return p.Item2;
-				return "";
-			}));
+					if (i == 0) return p.Item1;
+					if (i == 1) return p.Item2;
+					return "";
+				});
+
+			return null;
 		}
 
 		protected override void SetObjectType(Type t)
 		{
-			currentDataReader = dataReaders[t];
+			currentDataReader = createReader(t);
 		}
 
 		protected override void HandleObject(object Obj)
@@ -289,7 +290,7 @@ namespace Worker.Common.Formatters
 
 		public override void Dispose()
 		{
-			
+			currentDataReader.Dispose();
 		}
 	}
 }
