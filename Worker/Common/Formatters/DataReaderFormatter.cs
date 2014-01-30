@@ -241,25 +241,24 @@ namespace Worker.Common.Formatters
 		{
 			if (t == typeof(VkPost))
 				return new UniSocialObjectsDataReader(13, (o,i) => {
-				var p = o as VkPost;
-				var copyHistory = p.CopyHistory == null ? null : p.CopyHistory.FirstOrDefault();
+					var p = o as VkPost;
+					var copyHistory = p.CopyHistory == null ? null : p.CopyHistory.FirstOrDefault();
 
-				if (i == 0) return p.Id;
-				if (i == 1) return p.FromId;
-				if (i == 2) return p.ToId;
-				if (i == 3) return p.Date;
-				if (i == 4) return p.PostType;
-				if (i == 5) return p.Text;
-				if (i == 6) return p.Comments.Count;
-				if (i == 7) return p.Likes.Count;
-				if (i == 8) return p.Reposts.Count;
-				if (i == 9) return copyHistory == null ? 0 : copyHistory.Id;
-				if (i == 10) return copyHistory == null ? 0 : copyHistory.FromId;
-				if (i == 11) return copyHistory == null ? 0 : copyHistory.ToId;
-				if (i == 12) return copyHistory == null ? "" : copyHistory.Text;
-				return "";
-
-			});
+					if (i == 0) return p.Id;
+					if (i == 1) return p.FromId;
+					if (i == 2) return p.ToId;
+					if (i == 3) return p.Date;
+					if (i == 4) return p.PostType;
+					if (i == 5) return p.Text;
+					if (i == 6) return p.Comments.Count;
+					if (i == 7) return p.Likes.Count;
+					if (i == 8) return p.Reposts.Count;
+					if (i == 9) return copyHistory == null ? 0 : copyHistory.Id;
+					if (i == 10) return copyHistory == null ? 0 : copyHistory.FromId;
+					if (i == 11) return copyHistory == null ? 0 : copyHistory.ToId;
+					if (i == 12) return copyHistory == null ? "" : copyHistory.Text;
+					return "";
+				});
 			if (t == typeof(VkFriends))
 				return new UniSocialVkFriendDataReader(2, (o, i) =>
 				{
@@ -267,6 +266,18 @@ namespace Worker.Common.Formatters
 
 					if (i == 0) return p.Item1;
 					if (i == 1) return p.Item2;
+					return "";
+				});
+			if (t == typeof(VkComment))
+				return new UniSocialObjectsDataReader(5, (o, i) =>
+				{
+					var p = o as VkComment;
+
+					if (i == 0) return p.Id;
+					if (i == 1) return p.FromId;
+					if (i == 2) return p.Date;
+					if (i == 3) return p.Text;
+					if (i == 4) return p.Likes.Count;
 					return "";
 				});
 
