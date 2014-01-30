@@ -29,6 +29,7 @@ namespace Worker.Common.Formatters
 			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
 			formatters.Add(typeof(VkFriends), formatVkFriends);
 			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
+			formatters.Add(typeof(VkComment), formatVkComment);
 		}
 
 		#region Fromatters
@@ -178,17 +179,30 @@ namespace Worker.Common.Formatters
 				s.Write(obj.UserId); s.Write(","); s.Write(groupId); s.Write("\n");
 			}
 		}
+
+		private static void formatVkComment(object o, StreamWriter s)
+		{
+			var obj = o as VkComment;
+
+			s.Write("\""); s.Write(obj.Id); s.Write("\",");
+			s.Write("\""); s.Write(obj.FromId); s.Write("\",");
+			s.Write("\""); s.Write(obj.Date.ToString("o")); s.Write("\",");
+			s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
+			s.Write("\""); s.Write(obj.Likes != null ? obj.Likes.Count : 0); s.Write("\"\n");
+
+		}
+
 		#endregion
 
 		public CSVStreamFormatter()
 		{
-			resultStream = new MemoryStream();
-			writer = new StreamWriter(resultStream);
 		}
 
 		protected override void SetObjectType(Type t)
 		{
 			currentFormatter = formatters[t];
+			resultStream = new MemoryStream();
+			writer = new StreamWriter(resultStream);
 		}
 
 		protected override void HandleObject(object Obj)

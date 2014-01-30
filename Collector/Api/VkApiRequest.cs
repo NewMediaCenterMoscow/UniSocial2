@@ -22,6 +22,8 @@ namespace Collector.Api
 			objectTypeForMethods.Add("wall.get", typeof(VkPost));
 			objectTypeForMethods.Add("wall.getReposts", typeof(VkPost));
 			objectTypeForMethods.Add("friends.get", typeof(long));
+			objectTypeForMethods.Add("wall.getComments", typeof(VkComment));
+
 
 			requestTypes.Add("groups.getById", ApiRequestType.ListObjectsInfo);
 			requestTypes.Add("groups.getMembers", ApiRequestType.ListForObject);
@@ -31,6 +33,7 @@ namespace Collector.Api
 			requestTypes.Add("wall.get", ApiRequestType.ListForObject);
 			requestTypes.Add("wall.getReposts", ApiRequestType.ListForObject);
 			requestTypes.Add("friends.get", ApiRequestType.ListForObject);
+			requestTypes.Add("wall.getComments", ApiRequestType.ListForObject);
 
 			requestParams.Add("groups.getById", new Dictionary<string, string>() {
 				{ "fields", "members_count" } 
@@ -46,6 +49,9 @@ namespace Collector.Api
 			requestParams.Add("wall.get", new Dictionary<string, string>() {
 				{ "filter", "all" } 
 			});
+			requestParams.Add("wall.getComments", new Dictionary<string, string>() {
+				{ "need_likes", "1" } 
+			});
 
 			itemsMaxCounts.Add("groups.getMembers", 1000);
 			itemsMaxCounts.Add("groups.get", 1000);
@@ -53,6 +59,7 @@ namespace Collector.Api
 			itemsMaxCounts.Add("wall.getReposts", 1000);
 			itemsMaxCounts.Add("users.getSubscriptions", 200);
 			itemsMaxCounts.Add("friends.get", Int32.MaxValue);
+			itemsMaxCounts.Add("wall.getComments", Int32.MaxValue);
 
 			batchSizes.Add("users.get", 300);
 			batchSizes.Add("groups.getById", 300);
@@ -69,6 +76,7 @@ namespace Collector.Api
 
 		protected override void setIdParams(ApiRequestParam requestParam, string id)
 		{
+			string[] ids;
 			switch (requestParam.Method)
 			{
 				case "groups.getById":
@@ -94,7 +102,12 @@ namespace Collector.Api
 						requestParam.Params["domain"] = id;
 					break;
 				case "wall.getReposts":
-					var ids = id.Split('_'); // 0 - owner_id, 1 - post_id
+					ids = id.Split('_'); // 0 - owner_id, 1 - post_id
+					requestParam.Params["owner_id"] = ids[0];
+					requestParam.Params["post_id"] = ids[1];
+					break;
+				case "wall.getComments":
+					ids = id.Split('_'); // 0 - owner_id, 1 - post_id
 					requestParam.Params["owner_id"] = ids[0];
 					requestParam.Params["post_id"] = ids[1];
 					break;

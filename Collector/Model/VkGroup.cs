@@ -33,7 +33,7 @@ namespace Collector.Model
 		[JsonProperty("members_count")]
 		public int MembersCount { get; set; }
 
-		[JsonProperty("data_collection_id")]
-		public int DataCollectionId { get; set; }
+		//[JsonProperty("data_collection_id")]
+		//public int DataCollectionId { get; set; }
  	}
 }

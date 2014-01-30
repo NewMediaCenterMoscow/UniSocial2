@@ -22,26 +22,13 @@ namespace Collector.Model
 		Video
 	}
 
-	public class VkPost
+	public class VkPost : VKBaseWallObject
 	{
-		[JsonProperty("id")]
-		public long Id { get; set; }
-
-		[JsonProperty("from_id")]
-		public long FromId { get; set; }
-
 		[JsonProperty("to_id")]
 		public long ToId { get; set; }
 
-		[JsonProperty("date")]
-		[JsonConverter(typeof(UnixTimestampToDateTimeConverter))]
-		public DateTime Date { get; set; }
-
 		[JsonProperty("post_type")]
 		public VkPostType PostType { get; set; }
-
-		[JsonProperty("text")]
-		public string Text { get; set; }
 
 		[JsonProperty("comments")]
 		public VkNestedCount Comments { get; set; }
