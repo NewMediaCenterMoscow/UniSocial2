@@ -173,6 +173,16 @@ namespace Collector.Api
 
 				return res;
 			}
+			if (requestParam.Method == "wall.getComments")
+			{
+				var res = new VkWallComments();
+
+				res.OwnerId = Int32.Parse(requestParam.Params["owner_id"]);
+				res.PostId = Int32.Parse(requestParam.Params["post_id"]);
+				res.Comments = ((IEnumerable)Data).Cast<VkComment>().ToList();
+
+				return res;
+			}
 			
 			return Data;
 		}

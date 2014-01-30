@@ -81,6 +81,7 @@
     <Compile Include="Model\VkUser.cs" />
     <Compile Include="Model\VkUserGroups.cs" />
     <Compile Include="Model\VkUserSubscriptions.cs" />
+    <Compile Include="Model\VkWallComments.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

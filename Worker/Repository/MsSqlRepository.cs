@@ -59,7 +59,7 @@ namespace Worker.Repository
 			tableNames.Add(typeof(VkPost),		"posts");
 			tableNames.Add(typeof(VkFriends),	"friends");
 			tableNames.Add(typeof(VkUser),		"users");
-			tableNames.Add(typeof(VkComment),	"comments");
+			tableNames.Add(typeof(VkWallComments), "comments");
 
 		}
 	}

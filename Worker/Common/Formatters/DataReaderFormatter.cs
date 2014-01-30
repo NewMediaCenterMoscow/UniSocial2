@@ -220,7 +220,7 @@ namespace Worker.Common.Formatters
 			public UniSocialVkFriendDataReader(int FieldCount, Func<object, int, object> GetValue)
 				: base(FieldCount, GetValue)
 			{
-				
+
 			}
 
 			public override void AddItem(object NewItem)
@@ -230,11 +230,29 @@ namespace Worker.Common.Formatters
 					base.AddItem(new Tuple<long, long>(uf.UserId, f));
 			}
 		}
+		public class UniSocialVkWallCommentsDataReader : UniSocialObjectsDataReader
+		{
+			public UniSocialVkWallCommentsDataReader(int FieldCount, Func<object, int, object> GetValue)
+				: base(FieldCount, GetValue)
+			{
+
+			}
+
+			public override void AddItem(object NewItem)
+			{
+				var wc = NewItem as VkWallComments;
+				foreach (var c in wc.Comments)
+					base.AddItem(new Tuple<long, long, VkComment>(wc.OwnerId, wc.PostId, c));
+			}
+		}
+
+
 
 		UniSocialObjectsDataReader currentDataReader;
 
 		public DataReaderFormatter()
 		{
+
 		}
 
 		private UniSocialObjectsDataReader createReader(Type t)
@@ -268,16 +286,18 @@ namespace Worker.Common.Formatters
 					if (i == 1) return p.Item2;
 					return "";
 				});
-			if (t == typeof(VkComment))
-				return new UniSocialObjectsDataReader(5, (o, i) =>
+			if (t == typeof(VkWallComments))
+				return new UniSocialVkWallCommentsDataReader(7, (o, i) =>
 				{
-					var p = o as VkComment;
+					var p = o as Tuple<long,long, VkComment>;
 
-					if (i == 0) return p.Id;
-					if (i == 1) return p.FromId;
-					if (i == 2) return p.Date;
-					if (i == 3) return p.Text;
-					if (i == 4) return p.Likes.Count;
+					if (i == 0) return p.Item1;
+					if (i == 1) return p.Item1;
+					if (i == 2) return p.Item3.Id;
+					if (i == 3) return p.Item3.FromId;
+					if (i == 4) return p.Item3.Date;
+					if (i == 5) return p.Item3.Text;
+					if (i == 6) return p.Item3.Likes.Count;
 					return "";
 				});
 

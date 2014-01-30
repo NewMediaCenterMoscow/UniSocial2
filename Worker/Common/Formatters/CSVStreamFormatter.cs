@@ -29,7 +29,7 @@ namespace Worker.Common.Formatters
 			formatters.Add(typeof(VkGroupMembers), formatVkGroupMembers);
 			formatters.Add(typeof(VkFriends), formatVkFriends);
 			formatters.Add(typeof(VkUserGroups), formatVkUserGroups);
-			formatters.Add(typeof(VkComment), formatVkComment);
+			formatters.Add(typeof(VkWallComments), formatVkComment);
 		}
 
 		#region Fromatters
@@ -182,14 +182,18 @@ namespace Worker.Common.Formatters
 
 		private static void formatVkComment(object o, StreamWriter s)
 		{
-			var obj = o as VkComment;
+			var obj = o as VkWallComments;
 
-			s.Write("\""); s.Write(obj.Id); s.Write("\",");
-			s.Write("\""); s.Write(obj.FromId); s.Write("\",");
-			s.Write("\""); s.Write(obj.Date.ToString("o")); s.Write("\",");
-			s.Write("\""); s.Write(obj.Text.Replace("\"", "\"\"")); s.Write("\",");
-			s.Write("\""); s.Write(obj.Likes != null ? obj.Likes.Count : 0); s.Write("\"\n");
-
+			foreach (var comment in obj.Comments)
+			{
+				s.Write("\""); s.Write(obj.OwnerId); s.Write("\",");
+				s.Write("\""); s.Write(obj.PostId); s.Write("\",");
+				s.Write("\""); s.Write(comment.Id); s.Write("\",");
+				s.Write("\""); s.Write(comment.FromId); s.Write("\",");
+				s.Write("\""); s.Write(comment.Date.ToString("o")); s.Write("\",");
+				s.Write("\""); s.Write(comment.Text.Replace("\"", "\"\"")); s.Write("\",");
+				s.Write("\""); s.Write(comment.Likes != null ? comment.Likes.Count : 0); s.Write("\"\n");
+			}
 		}
 
 		#endregion
