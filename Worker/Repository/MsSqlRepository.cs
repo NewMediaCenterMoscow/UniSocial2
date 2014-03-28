@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Worker.Common;
 using Worker.Common.Formatters;
 
 namespace Worker.Repository
@@ -45,7 +46,15 @@ namespace Worker.Repository
 				}
 				catch
 				{
-					throw;
+					// Write object row-by-row
+					if (Helpers.IsList(Obj))
+					{
+						var objLists = Obj as List<object>;
+						foreach (var o in objLists)
+						{
+							WriteResult(o);
+						}
+					}
 				}
 				finally
 				{

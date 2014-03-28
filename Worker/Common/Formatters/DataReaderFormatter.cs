@@ -301,6 +301,40 @@ namespace Worker.Common.Formatters
 					return "";
 				});
 
+			if (t == typeof(VkUser))
+				return new UniSocialObjectsDataReader(24, (o, i) =>
+				{
+					var p = o as VkUser;
+
+					if (i == 0) return p.Id;
+					if (i == 1) return p.FirstName;
+					if (i == 2) return p.LastName;
+					if (i == 3) return p.Sex;
+					if (i == 4) return p.Nickname;
+					if (i == 5) return p.ScreenName;
+					if (i == 6) return p.BDate;
+					if (i == 7) return p.Country;
+					if (i == 8) return p.City;
+					if (i == 9) return p.Deactivated;
+					if (i == 10) return p.Timezone;
+					if (i == 11) return p.Photo50;
+					if (i == 12) return p.Photo100;
+					if (i == 13) return p.Photo200;
+					if (i == 14) return p.PhotoMaxOrig;
+					if (i == 15) return p.HasMobile;
+					if (i == 16) return p.Online;
+					if (i == 17) return p.MobilePhone;
+					if (i == 18) return p.HomePhone;
+					if (i == 19) return p.University;
+					if (i == 20) return p.UniversityName;
+					if (i == 21) return p.Faculty;
+					if (i == 22) return p.FacultyName;
+					if (i == 23) return p.Graduation; 
+					return "";
+				});
+
+
+
 			return null;
 		}
 
