@@ -245,6 +245,21 @@ namespace Worker.Common.Formatters
 					base.AddItem(new Tuple<long, long, VkComment>(wc.OwnerId, wc.PostId, c));
 			}
 		}
+		public class UniSocialVkUserSubscriptionsDataReader : UniSocialObjectsDataReader
+		{
+			public UniSocialVkUserSubscriptionsDataReader(int FieldCount, Func<object, int, object> GetValue)
+				: base(FieldCount, GetValue)
+			{
+
+			}
+
+			public override void AddItem(object NewItem)
+			{
+				var us = NewItem as VkUserSubscriptions;
+				foreach (var g in us.Groups.Items)
+					base.AddItem(new Tuple<long, long>(us.Id, g));
+			}
+		}
 
 
 
@@ -333,6 +348,15 @@ namespace Worker.Common.Formatters
 					return "";
 				});
 
+			if (t == typeof(VkUserSubscriptions))
+				return new UniSocialVkUserSubscriptionsDataReader(2, (o, i) =>
+				{
+					var p = o as Tuple<long, long>;
+
+					if (i == 0) return p.Item1;
+					if (i == 1) return p.Item2;
+					return "";
+				});
 
 
 			return null;

@@ -69,6 +69,7 @@ namespace Worker.Repository
 			tableNames.Add(typeof(VkFriends),	"friends");
 			tableNames.Add(typeof(VkUser),		"users");
 			tableNames.Add(typeof(VkWallComments), "comments");
+			tableNames.Add(typeof(VkUserSubscriptions), "user_groups");
 
 		}
 	}
