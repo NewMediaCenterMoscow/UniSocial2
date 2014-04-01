@@ -77,22 +77,46 @@ namespace Collector.Api
 
 		public override async Task<JObject> ExecuteRequest(string Method, Dictionary<string, string> Params)
 		{
-			JObject result =  await base.ExecuteRequest(Method, Params);
+			bool needRepeat;
+			int maxRepeat = 10;
+			int currentRepeat = 0;
+			int baseInterval = 300;
+			JObject result = null;
 
-            if (result != null && result["error"] != null)
-            {
-                var errorCode = (int)result["error"]["error_code"];
-                var errorMessage = (string)result["error"]["error_msg"];
+			do
+			{
+				needRepeat = false;
+				result =  await base.ExecuteRequest(Method, Params);
 
-                throw new ApiException(errorMessage, errorCode);
-            }
-            else if(result == null)
+				if (result != null && result["error"] != null)
+				{
+					var errorCode = (int)result["error"]["error_code"];
+					var errorMessage = (string)result["error"]["error_msg"];
+
+					if (errorCode == 6) // Too many request per second
+					{
+						needRepeat = true;
+						currentRepeat++;
+						var sleepTime = baseInterval * currentRepeat;
+						Trace.TraceInformation("Too many request per second, repeat " + currentRepeat + " in " + sleepTime + "ms");
+						Thread.Sleep(sleepTime);
+					}
+					else
+						throw new ApiException(errorMessage, errorCode);
+				}
+
+			} while (needRepeat && currentRepeat < maxRepeat);
+
+            if(result == null)
             {
                 throw new ApiException("Cannot get data from server",0);
             }
 
 			if (isMethodNeedAuth(Method))
-				Thread.Sleep(300);
+			{
+				Console.WriteLine("Sleep by thread {0}", Thread.CurrentThread.ManagedThreadId);
+				Thread.Sleep(400);
+			}
 
 			return result;
 		}

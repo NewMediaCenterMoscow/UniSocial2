@@ -70,6 +70,7 @@ namespace Worker.Repository
 			tableNames.Add(typeof(VkUser),		"users");
 			tableNames.Add(typeof(VkWallComments), "comments");
 			tableNames.Add(typeof(VkUserSubscriptions), "user_groups");
+			tableNames.Add(typeof(VkUserGroups), "user_groups");
 
 		}
 	}

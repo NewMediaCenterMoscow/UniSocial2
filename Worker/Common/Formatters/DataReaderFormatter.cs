@@ -260,8 +260,22 @@ namespace Worker.Common.Formatters
 					base.AddItem(new Tuple<long, long>(us.Id, g));
 			}
 		}
+		public class UniSocialVkUserGroupsDataReader : UniSocialObjectsDataReader
+		{
+			public UniSocialVkUserGroupsDataReader(int FieldCount, Func<object, int, object> GetValue)
+				: base(FieldCount, GetValue)
+			{
 
+			}
 
+			public override void AddItem(object NewItem)
+			{
+				var ug = NewItem as VkUserGroups;
+				foreach (var g in ug.Groups)
+					base.AddItem(new Tuple<long, long>(ug.UserId, g));
+			}
+		}
+		
 
 		UniSocialObjectsDataReader currentDataReader;
 
@@ -357,7 +371,16 @@ namespace Worker.Common.Formatters
 					if (i == 1) return p.Item2;
 					return "";
 				});
+			if (t == typeof(VkUserGroups))
+				return new UniSocialVkUserGroupsDataReader(2, (o, i) =>
+				{
+					var p = o as Tuple<long, long>;
 
+					if (i == 0) return p.Item1;
+					if (i == 1) return p.Item2;
+					return "";
+				});
+			
 
 			return null;
 		}
