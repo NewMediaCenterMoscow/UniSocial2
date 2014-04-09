@@ -321,7 +321,7 @@ namespace Worker.Common.Formatters
 					var p = o as Tuple<long,long, VkComment>;
 
 					if (i == 0) return p.Item1;
-					if (i == 1) return p.Item1;
+					if (i == 1) return p.Item2;
 					if (i == 2) return p.Item3.Id;
 					if (i == 3) return p.Item3.FromId;
 					if (i == 4) return p.Item3.Date;

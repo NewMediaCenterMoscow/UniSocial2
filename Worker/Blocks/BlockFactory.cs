@@ -124,7 +124,7 @@ namespace Worker.Blocks
 					return result;
 				} , new ExecutionDataflowBlockOptions()
 				{
-					MaxDegreeOfParallelism = 1,
+					MaxDegreeOfParallelism = 5,
 					BoundedCapacity = 1000
 				}
 			);
