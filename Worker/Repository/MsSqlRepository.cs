@@ -46,15 +46,16 @@ namespace Worker.Repository
 				}
 				catch
 				{
-					// Write object row-by-row
-					if (Helpers.IsList(Obj))
+					var sqlInsertFormatter = new SqlInsertFormatter(tableName);
+					var sqls = sqlInsertFormatter.FormatObject(Obj) as List<string>;
+
+					foreach (var insr in sqls)
 					{
-						var objLists = Obj as List<object>;
-						foreach (var o in objLists)
-						{
-							WriteResult(o);
-						}
+						SqlCommand cmd = new SqlCommand(insr, writeConn as SqlConnection);
+						cmd.ExecuteNonQuery();
 					}
+
+
 				}
 				finally
 				{
@@ -71,6 +72,7 @@ namespace Worker.Repository
 			tableNames.Add(typeof(VkWallComments), "comments");
 			tableNames.Add(typeof(VkUserSubscriptions), "user_groups");
 			tableNames.Add(typeof(VkUserGroups), "user_groups");
+			tableNames.Add(typeof(VkGroupMembers), "user_groups");
 
 		}
 	}

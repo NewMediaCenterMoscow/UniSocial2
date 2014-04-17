@@ -275,7 +275,21 @@ namespace Worker.Common.Formatters
 					base.AddItem(new Tuple<long, long>(ug.UserId, g));
 			}
 		}
-		
+		public class UniSocialVkGroupMembersDataReader : UniSocialObjectsDataReader
+		{
+			public UniSocialVkGroupMembersDataReader(int FieldCount, Func<object, int, object> GetValue)
+				: base(FieldCount, GetValue)
+			{
+
+			}
+
+			public override void AddItem(object NewItem)
+			{
+				var gm = NewItem as VkGroupMembers;
+				foreach (var m in gm.GroupMembers)
+					base.AddItem(new Tuple<long, long>(m, gm.GroupId));
+			}
+		}		
 
 		UniSocialObjectsDataReader currentDataReader;
 
@@ -380,6 +394,15 @@ namespace Worker.Common.Formatters
 					if (i == 1) return p.Item2;
 					return "";
 				});
+			if (t == typeof(VkGroupMembers))
+				return new UniSocialVkGroupMembersDataReader(2, (o, i) =>
+				{
+					var p = o as Tuple<long, long>;
+
+					if (i == 0) return p.Item1;
+					if (i == 1) return p.Item2;
+					return "";
+				});			
 			
 
 			return null;
@@ -388,6 +411,11 @@ namespace Worker.Common.Formatters
 		protected override void SetObjectType(Type t)
 		{
 			currentDataReader = createReader(t);
+
+			if (currentDataReader == null)
+			{
+				throw new Exception("Not found data reader for type" + t.ToString());
+			}
 		}
 
 		protected override void HandleObject(object Obj)

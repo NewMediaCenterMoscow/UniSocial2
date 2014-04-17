@@ -99,6 +99,7 @@
     <Compile Include="Common\Formatters\CSVStreamFormatter.cs" />
     <Compile Include="Common\Formatters\DataReaderFormatter.cs" />
     <Compile Include="Common\Formatters\IFormatter.cs" />
+    <Compile Include="Common\Formatters\SqlInsertFormatter.cs" />
     <Compile Include="Common\Helpers.cs" />
     <Compile Include="Common\Formatters\ObjectFormatter.cs" />
     <Compile Include="Repository\DbRepositiry.cs" />
